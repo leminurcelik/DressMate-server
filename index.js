@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 //Import packages
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -7,8 +9,11 @@ const authRouter =require('./routes/signin');
 const connectDB = require('./helpers/connectDB');
 const auth = require('./routes/userRoutes');
 const weather = require('./routes/weatherRoutes');
+const clothingItem = require('./routes/clothingItemRoutes');
+const outfit = require('./routes/outfitRoutes');
 
 //init
+const PORT = 3000;
 const app = express();
 var jsonParser = bodyParser.json();
 
@@ -19,11 +24,15 @@ app.use(jsonParser);
 app.use(authRouter);
 app.use(auth);
 app.use(weather);
+app.use(clothingItem);
+app.use(outfit);
 //app.use(express.json());
 
+
+
 //binds itself to host and listen for any other connection
-app.listen(process.env.PORT, () => {
-    console.log(`connected at port ${process.env.PORT}`);
+app.listen(PORT, () => {
+    console.log(`connected at port ${PORT}`);
     connectDB()
 }); //NEED to specify 0.0.0.0 for android
 
