@@ -13,7 +13,6 @@ const clothingItem = require('./routes/clothingItemRoutes');
 const outfit = require('./routes/outfitRoutes');
 
 //init
-const PORT = 3000;
 const app = express();
 var jsonParser = bodyParser.json();
 
@@ -28,11 +27,9 @@ app.use(clothingItem);
 app.use(outfit);
 //app.use(express.json());
 
-
-
 //binds itself to host and listen for any other connection
-app.listen(PORT, () => {
-    console.log(`connected at port ${PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log(`connected at port ${process.env.PORT}`);
     connectDB()
 }); //NEED to specify 0.0.0.0 for android
 
