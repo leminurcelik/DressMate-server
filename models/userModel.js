@@ -10,7 +10,6 @@
  */
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const clothingItem = require("./clothingItemModel.js");
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -28,8 +27,8 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     wardrobe: {
-        type: [clothingItem.schema], // An array of ClothingItem documents
-        required: true,
+        type: [mongoose.Schema.Types.ObjectId], // An array of ClothingItem documents
+        ref: 'ClothingItem', // The model to use
         default: [],
     },
 });

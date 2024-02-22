@@ -27,6 +27,8 @@ app.use(clothingItem);
 app.use(outfit);
 //app.use(express.json());
 
+
+
 //binds itself to host and listen for any other connection
 app.listen(process.env.PORT, () => {
     console.log(`connected at port ${process.env.PORT}`);
