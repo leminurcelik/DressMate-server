@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    favoriteClothingItems: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ClothingItem',
+  }],
 });
 //works just before the data added to the db
 userSchema.pre("save", async function (next) {
