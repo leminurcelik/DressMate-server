@@ -1,5 +1,4 @@
 const OutfitGeneratorFactory = require('./outfitGeneratorFactory');
+const ItemFilterGeneratorFactory = require('./itemFilterFactory');
 
-module.exports = {
-    OutfitGeneratorFactory
-};
+module.exports = { OutfitGeneratorFactory, ItemFilterGeneratorFactory };

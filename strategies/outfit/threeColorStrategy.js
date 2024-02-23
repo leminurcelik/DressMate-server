@@ -1,7 +1,7 @@
 const baseOutfitStrategy = require('./baseOutfitStrategy');
-const ClothingItem = require('../controllers/clothingItem');
-const Outfit = require("../models/outfitModel");
-const weather = require('../controllers/weather');
+const ClothingItem = require('../../controllers/clothingItem');
+const Outfit = require("../../models/outfitModel");
+const weather = require('../../controllers/weather');
 
 class ThreeColorStrategy extends baseOutfitStrategy {
     async generateOutfit(userId, options) {
