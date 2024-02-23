@@ -26,11 +26,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    wardrobe: {
-        type: [mongoose.Schema.Types.ObjectId], // An array of ClothingItem documents
-        ref: 'ClothingItem', // The model to use
-        default: [],
-    },
 });
 //works just before the data added to the db
 userSchema.pre("save", async function (next) {
