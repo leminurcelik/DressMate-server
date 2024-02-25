@@ -23,8 +23,7 @@ class preppyFilterStrategy extends baseFilterStrategy{
         }
         // filter the clothing items by the weather and style
         const filteredItems = clothingItems.filter(item => {
-            return item.wearableWeather === dayWeather &&
-                   item.style === options.style
+            return item.wearableWeather === dayWeather 
         });
         return filteredItems;
     }

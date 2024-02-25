@@ -2,49 +2,33 @@ const baseOutfitStrategy = require('./baseOutfitStrategy');
 const ClothingItem = require('../../controllers/clothingItem');
 const Outfit = require("../../models/outfitModel");
 const weather = require('../../controllers/weather');
+const itemFilterFactory = require('../../factories/itemFilterFactory');
 
 class RomanticOutfitStrategy extends baseOutfitStrategy {
     async generateOutfit(userId, options) {
         console.log('romanticOutfitStrategy');
-
-
-        //ALTTAKİ FİLTRELEME KISMI FİLTER FACTORY'YE DEVREDİLECEK VE
-        //BURADA ÇALIŞAN OUTFİT OLUŞTURMA MANTIĞI THREECOLORSTRATEGY'YLE AYNI
-        //BU YAPININ DA GÖZDEN GEÇİRİLİP BAZI CASELERE GÖRE UYARLANMASI LAZIMMMM
-        // OUTFIT STRATEGY BURADA ITEM FILTERI ÇAĞIRACAK GELEN ITEMLERDEN OUTFIT OLUŞTURULACAK
-
-     //get the weather data
+        // get the weather data
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
+        console.log('weatherData:', weatherData);
 
-        // get the clothing items of the user
-        const clothingItems = await ClothingItem.getAllClothingItems(userId);
+        const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'romantic');
 
-        // get the temperature
-        const temp = weatherData.temperature;
-
-        // get the weather condition
-        let dayWeather;
-        if (temp >= 15 ) {
-            dayWeather = "Hot";
-        }
-        else {
-            dayWeather = "Cold";
-        }
-        console.log('dayWeather:', dayWeather);
         // filter the clothing items by the weather and style
-        const filteredItems = clothingItems.filter(item => {
-            return item.wearableWeather === dayWeather
-        });
+        const filteredItems = await itemFilterGenerator.filterItems(userId, options);
+        console.log('filteredItems:', filteredItems);
+
+
         //console.log('filteredItems:', filteredItems);
         // get 3 random colors     
         const selectedColors = getRandomColors(filteredItems, 3);
 
         // create the outfit
+        let temp = weatherData.temperature;
         let outfit;
         if (temp<= 15) {
-            outfit = createColdWeatherOutfit(clothingItems,selectedColors, weatherData.temperature, weatherData.condition);
+            outfit = createColdWeatherOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
         } else {
-            outfit = createHotWeatherOutfit(clothingItems,selectedColors, weatherData.temperature, weatherData.condition);
+            outfit = createHotWeatherOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
             console.log('outfit:', outfit);
         }
         
@@ -119,3 +103,10 @@ function getRandomItemByColorAndType(clothingItems, colors, type) {
     return items[randomIndex];
 }
 module.exports = RomanticOutfitStrategy;
+
+
+
+  /**
+         * 
+
+         */

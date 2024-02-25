@@ -1,12 +1,13 @@
-const itemFilterGenerator = require('./generators/itemFilterGenerator');
-const athleisureFilterStrategy = require('./strategies/itemFilter/athleisureFilterStrategy');
-const tomboyFilterStrategy = require('./strategies/itemFilter/tomboyFilterStrategy');
-const romanticFilterStrategy = require('./strategies/itemFilter/romanticFilterStrategy');
-const preppyFilterStrategy = require('./strategies/itemFilter/preppyFilterStrategy');
+const itemFilterGenerator = require('../generators/itemFilterGenerator');
+const athleisureFilterStrategy = require('../strategies/itemFilter/athleisureFilterStrategy');
+const tomboyFilterStrategy = require('../strategies/itemFilter/tomboyFilterStrategy');
+const romanticFilterStrategy = require('../strategies/itemFilter/romanticFilterStrategy');
+const preppyFilterStrategy = require('../strategies/itemFilter/preppyFilterStrategy');
 
-class ItemFilterGeneratorFactory {
-    static createItemFilterGenerator(userId, options) {
-        switch (options.type) {
+class ItemFilterFactory {
+    static ItemFilterFactory(userId, options, filter) {
+        console.log('cam to itemFilterFactory   ', filter);
+        switch (filter) {
             case 'athleisure':
                 return new itemFilterGenerator(new athleisureFilterStrategy(userId, options));
             case 'tomboy':
@@ -21,4 +22,4 @@ class ItemFilterGeneratorFactory {
     }
 };
 
-module.exports = ItemFilterGeneratorFactory;
+module.exports = ItemFilterFactory;
