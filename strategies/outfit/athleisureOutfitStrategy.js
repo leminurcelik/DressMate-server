@@ -10,35 +10,27 @@ class AthleisureOutfitStrategy extends baseOutfitStrategy {
 
         // get the weather data
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
+        console.log('weatherData:', weatherData);
 
-        // get the clothing items of the user
-        const clothingItems = await ClothingItem.getAllClothingItems(userId);
+        const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'athleisure');
 
-        // get the temperature
-        const temp = weatherData.temperature;
-
-        // get the weather condition
-        let dayWeather;
-        if (temp >= 15 ) {
-            dayWeather = "Hot";
-        }
-        else {
-            dayWeather = "Cold";
-        }
         // filter the clothing items by the weather and style
-        const filteredItems = clothingItems.filter(item => {
-            return item.wearableWeather === dayWeather &&
-                   item.style === options.style
-        });
+        const filteredItems = await itemFilterGenerator.filterItems(userId, options);
+        console.log('filteredItems:', filteredItems);
+
+
+        //console.log('filteredItems:', filteredItems);
         // get 3 random colors     
         const selectedColors = getRandomColors(filteredItems, 3);
 
         // create the outfit
+        let temp = weatherData.temperature;
         let outfit;
         if (temp<= 15) {
-            outfit = createColdWeatherOutfit(clothingItems,selectedColors, weatherData.temperature, weatherData.condition);
+            outfit = createColdWeatherOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
         } else {
-            outfit = createHotWeatherOutfit(clothingItems,selectedColors, weatherData.temperature, weatherData.condition);
+            outfit = createHotWeatherOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
+            console.log('outfit:', outfit);
         }
         
         return outfit;
