@@ -30,17 +30,15 @@ const addClothingItem = async (userId, clothingItemData) => {
 // change favorite status of a clothing item
 const favoriteStatus = async (userId, clothingItemId) => {
     try {
-        console.log("User", userId);
-        console.log("clothing item id", clothingItemId);
         // Find the user by ID
         const user = await User.findById(userId);
-        console.log(user);
         if (!user) {
-            throw new Error('User not found');
+            return 'User not found';
         }
+        // Find the cloth by clothing item ID
         const cloth = await ClothingItem.findById(clothingItemId);
         if (!cloth) {
-            throw new Error('Cloth not found');
+            return 'Cloth not found';
         }
 
         // If the cloth is already in favorites, remove it
@@ -53,6 +51,40 @@ const favoriteStatus = async (userId, clothingItemId) => {
         }
         // Toggle the favorite status of the clothing item
         cloth.isFavorite = !cloth.isFavorite;
+        // Save the updated user document
+        await cloth.save();
+        const result = await user.save();
+        return result;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+// change laundry status of a clothing item
+const laundryStatus = async (userId, clothingItemId) => {
+    try {
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return 'User not found';
+        }
+        // Find the cloth by clothing item ID
+        const cloth = await ClothingItem.findById(clothingItemId);
+        if (!cloth) {
+            return 'Cloth not found';
+        }
+
+        // If the clothing item is clean, add it to laundry basket and change the clean status to false
+        if (cloth.isClean && !user.laundryBasket.includes(clothingItemId)) {
+            user.laundryBasket.push(clothingItemId);
+        }
+        // If the clothing item is not clean, remove it from laundry basket and change the clean status to true
+        else if (!cloth.isClean && user.laundryBasket.includes(clothingItemId)) {
+            user.laundryBasket.pull(clothingItemId);
+        }
+        // Toggle the clean status of the clothing item
+        cloth.isClean = !cloth.isClean;
         // Save the updated user document
         await cloth.save();
         const result = await user.save();
@@ -113,4 +145,4 @@ const getItemsById = async (itemId, userId) => {
         return null;
     }
 }
-module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus};
+module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus};

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus}= require('../controllers/clothingItem.js');
+const {addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus}= require('../controllers/clothingItem.js');
 const {User} = require("../models/userModel.js");
 
 const { verify } = require('jsonwebtoken');
@@ -28,7 +28,19 @@ router.post('/favoriteStatus',verifyToken, async (req, res) => {
         res.status(200).json(result);
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ message: error.message});
+        res.status(403).send({ message: error.message});
+    }
+});
+
+router.post('/laundryStatus',verifyToken, async (req, res) => {
+    console.log('req.body._id:', req.body._id);
+    try {
+        console.log('req.userId:', req.userId);  
+        const result = await laundryStatus(req.userId, req.body._id);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(403).send({ message: error.message});
     }
 });
 
