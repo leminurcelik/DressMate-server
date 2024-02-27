@@ -29,6 +29,33 @@ const generateOutfit = async (userId, options) => {
     }
 }
 
+const saveOutfit = async (userId, outfitInfo) => {
+    try {
+        const newOutfit = await Outfit.create(outfitInfo); 
+        const user = await User.findById(userId);
+        user.savedOutfit.push(newOutfit._id);
+        const result = await user.save();
+        return result;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+const getSavedOutfits = async (userId) => {
+    try {
+        console.log('getSavedOutfits');
+        console.log('userId:', userId);
+        const user = await User.findById(userId);
+        const savedOutfits = await Outfit.find({ _id: { $in: user.savedOutfit } });
+        console.log('savedOutfits:', savedOutfits);
+        return savedOutfits;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
 const saveOutfitStatus = async (userId, outfitId) => {
     try {
         // Find the user by ID
@@ -62,4 +89,6 @@ const saveOutfitStatus = async (userId, outfitId) => {
     }
 }
 
-module.exports = { generateOutfit, saveOutfitStatus };
+
+
+module.exports = { generateOutfit, saveOutfitStatus, saveOutfit, getSavedOutfits };
