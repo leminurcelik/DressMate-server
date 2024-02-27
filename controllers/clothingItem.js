@@ -27,6 +27,40 @@ const addClothingItem = async (userId, clothingItemData) => {
     }
 }
 
+// delete clothing item
+const deleteClothingItem = async (userId, clothingItemId) => {
+    try {
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return 'User not found';
+        }
+
+        // Find the clothing item by ID
+        const cloth = await ClothingItem.findById(clothingItemId);
+        if (!cloth) {
+            return 'Clothing item not found';
+        }
+        console.log(String(cloth.user));
+        console.log(String(cloth.userId));
+
+        // Check if the clothing item belongs to the user
+        if (String(cloth.userId) !== userId) {
+            return 'Clothing item does not belong to the user';
+        }
+
+        // Find the clothing item by ID and delete it
+        const result = await ClothingItem.deleteOne({ _id: clothingItemId });
+        if (result.deletedCount === 0) {
+            return 'Clothing item not found';
+        }
+        return result;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
 // change favorite status of a clothing item
 const favoriteStatus = async (userId, clothingItemId) => {
     try {
@@ -38,7 +72,7 @@ const favoriteStatus = async (userId, clothingItemId) => {
         // Find the cloth by clothing item ID
         const cloth = await ClothingItem.findById(clothingItemId);
         if (!cloth) {
-            return 'Cloth not found';
+            return 'Clothing item not found';
         }
 
         // If the cloth is already in favorites, remove it
@@ -72,7 +106,7 @@ const laundryStatus = async (userId, clothingItemId) => {
         // Find the cloth by clothing item ID
         const cloth = await ClothingItem.findById(clothingItemId);
         if (!cloth) {
-            return 'Cloth not found';
+            return 'Clothing item not found';
         }
 
         // If the clothing item is clean, add it to laundry basket and change the clean status to false
@@ -145,4 +179,4 @@ const getItemsById = async (itemId, userId) => {
         return null;
     }
 }
-module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus};
+module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem};
