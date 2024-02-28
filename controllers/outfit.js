@@ -32,6 +32,8 @@ const generateOutfit = async (userId, options) => {
 const saveOutfit = async (userId, outfitInfo) => {
     try {
         const newOutfit = await Outfit.create(outfitInfo); 
+        newOutfit.isSaved = true;
+        await newOutfit.save(); 
         const user = await User.findById(userId);
         user.savedOutfit.push(newOutfit._id);
         const result = await user.save();
