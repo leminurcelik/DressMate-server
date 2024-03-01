@@ -1,17 +1,4 @@
-/*Cothing Item Model:
-    * Attributes:
-    * itemId: Unique identifier for each clothing item.
-    * itemName: Name or description of the clothing item.
-    * itemType: Category or type of the clothing item (e.g., shirt, pants, shoes).
-    * itemColor: options will be set
-    * itemImage: Image or reference to an image of the clothing item. (Url)
-    * isClean: Boolean indicating whether the item is clean or dirty.
-    * isFavorite: Boolean indicating whether the item is favorite or not. */
-const colorOptions = ['Red', 'Blue', 'Green', 'Yellow', 'Black', 'White', 'Gray']; // Example color options
-const styleOptions = ['Casual', 'Formal', 'Sportswear', 'Evening']; // Example style options
-const categoryOptions = ['Top', 'Bottom', 'Shoes', 'One-piece', 'Outerwear']; // Example category options
-const subcategoryOptions = ['T-shirt', 'Blouse', 'Sweater', 'Dress', 'Jumpsuit', 'Skirt', 'Pants', 'Shorts', 'Jeans', 'Sneakers', 'Sandals', 'Boots', 'Jacket', 'Coat']; // Example subcategory options
-const weatherOptions = ['Hot', 'Cold']; // Example weather options
+const clothingItemOptions = require('../config/clothingItemOptions.js');
 const mongoose = require("mongoose");
 const clothingItemSchema = new mongoose.Schema({
     userId: {
@@ -26,27 +13,27 @@ const clothingItemSchema = new mongoose.Schema({
     style: {
         type: String,
         required: true,
-        enum: styleOptions,
+        enum: clothingItemOptions.styleOptions,
     },
     color: {
         type: String,
         required: true,
-        enum: colorOptions,
+        enum: clothingItemOptions.colorOptions,
     },
     wearableWeather: {
         type: String,
         required: true,
-        enum: weatherOptions,
+        enum: clothingItemOptions.wearableWeatherOptions,
     },
     category: { // top, bottom, shoes, one-piece, accessory, outerwear
         type: String,
         required: true,
-        enum: categoryOptions,
+        enum: clothingItemOptions.categoryOptions,
     },
     subcategory: { // t-shirt, blouse, dress, skirt, pants, shorts, jeans, sneakers, sandals, boots, hat, scarf, jacket, coat, etc.
         type: String,
         required: true,
-        enum: subcategoryOptions,
+        enum: clothingItemOptions.subcategoryOptions,
     },
     imageUrl: {
         type: String,

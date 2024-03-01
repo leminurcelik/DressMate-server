@@ -5,6 +5,7 @@ const {User} = require("../models/userModel.js");
 
 const { verify } = require('jsonwebtoken');
 const verifyToken = require('../middleware/auth');
+const clothingItemOptions = require('../config/clothingItemOptions.js');
 
 const router = express.Router();
 
@@ -98,6 +99,15 @@ router.get('/getItemById',verifyToken, async (req, res) => {
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ message: "Internal error" });
+    }
+});
+
+router.get('/getOptions', async (req, res) => {
+    try {
+        res.json(clothingItemOptions);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: error.message});
     }
 });
 
