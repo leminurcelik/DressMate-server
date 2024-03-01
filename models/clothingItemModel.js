@@ -30,10 +30,25 @@ const clothingItemSchema = new mongoose.Schema({
         required: true,
         enum: clothingItemOptions.categoryOptions,
     },
-    subcategory: { // t-shirt, blouse, dress, skirt, pants, shorts, jeans, sneakers, sandals, boots, hat, scarf, jacket, coat, etc.
+    subcategory: { 
         type: String,
         required: true,
-        enum: clothingItemOptions.subcategoryOptions,
+        enum: function() {
+            switch(this.category) {
+                case 'Top':
+                    return clothingItemOptions.subCategoriesofTop;
+                case 'Bottom':
+                    return clothingItemOptions.subCategoriesofBottom;
+                case 'Shoes':
+                    return clothingItemOptions.subCategoriesofShoes;
+                case 'One-piece':
+                    return clothingItemOptions.subCategoriesofOnePiece;
+                case 'Outerwear':
+                    return clothingItemOptions.subCategoriesofOuterwear;
+                default:
+                    return [];
+            }
+        }
     },
     imageUrl: {
         type: String,
