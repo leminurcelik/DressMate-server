@@ -33,22 +33,25 @@ const clothingItemSchema = new mongoose.Schema({
     subcategory: { 
         type: String,
         required: true,
-        enum: function() {
-            switch(this.category) {
-                case 'Top':
-                    return clothingItemOptions.subCategoriesofTop;
-                case 'Bottom':
-                    return clothingItemOptions.subCategoriesofBottom;
-                case 'Shoes':
-                    return clothingItemOptions.subCategoriesofShoes;
-                case 'One-piece':
-                    return clothingItemOptions.subCategoriesofOnePiece;
-                case 'Outerwear':
-                    return clothingItemOptions.subCategoriesofOuterwear;
-                default:
-                    return [];
-            }
-        }
+        validate: {
+            validator: function() {
+                switch(this.category) {
+                    case 'Top':
+                        return clothingItemOptions.subCategoriesofTop.includes(this.subcategory);
+                    case 'Bottom':
+                        return clothingItemOptions.subCategoriesofBottom.includes(this.subcategory);
+                    case 'Shoes':
+                        return clothingItemOptions.subCategoriesofShoes.includes(this.subcategory);
+                    case 'One-piece':
+                        return clothingItemOptions.subCategoriesofOnePiece.includes(this.subcategory);
+                    case 'Outerwear':
+                        return clothingItemOptions.subCategoriesofOuterwear.includes(this.subcategory);
+                    default:
+                        return false;
+                }
+            },
+            message: props => `${props.value} is not a valid subcategory for the selected category.`,
+        },
     },
     imageUrl: {
         type: String,
