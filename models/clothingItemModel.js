@@ -15,10 +15,15 @@ const clothingItemSchema = new mongoose.Schema({
         required: true,
         enum: clothingItemOptions.styleOptions,
     },
-    color: {
+    color: [{
         type: String,
         required: true,
         enum: clothingItemOptions.colorOptions,
+    }],
+    pattern: {
+        type: String,
+        required: true,
+        enum: clothingItemOptions.patternOptions,
     },
     wearableWeather: {
         type: String,

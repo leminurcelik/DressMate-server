@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem}= require('../controllers/clothingItem.js');
+const {addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems}= require('../controllers/clothingItem.js');
 const {User} = require("../models/userModel.js");
 
 const { verify } = require('jsonwebtoken');
@@ -20,6 +20,19 @@ router.post('/addClothingItem',verifyToken, async (req, res) => {
         res.status(500).json({ message: error.message});
     }
 });
+
+router.post('/addClothingItem',verifyToken, async (req, res) => {
+    console.log('req.body:', req.body);
+    try {
+        console.log('req.userId:', req.userId);  
+        const result = await addClothingItems(req.userId, req.body);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: error.message});
+    }
+});
+
 
 router.post('/deleteClothingItem',verifyToken, async (req, res) => {
     console.log('req.body:', req.body._id);

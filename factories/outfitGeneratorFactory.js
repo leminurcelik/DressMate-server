@@ -13,7 +13,8 @@ class OutfitGeneratorFactory {
         const clothingItems = await ClothingItem.getAllClothingItems(userId);
 
         // Check for Romantic strategy
-        if (clothingItems.some(item => (item.subcategory === 'Skirt' || item.subcategory === 'Dress') && ['Blue', 'Red', 'Yellow', 'Green'].includes(item.color))) {
+        console.log('checking for romantic strategy')
+        if (clothingItems.some(item => (item.subcategory === 'Skirt' || item.subcategory === 'Dress') && item.color.some(color => ['Blue', 'Red', 'Yellow', 'Green'].includes(color)))) {
             strategies.push(new RomanticOutfitStrategy(userId, options));
         }
 

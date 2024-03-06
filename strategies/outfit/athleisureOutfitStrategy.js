@@ -26,12 +26,8 @@ class AthleisureOutfitStrategy extends baseOutfitStrategy {
         // create the outfit
         let temp = weatherData.temperature;
         let outfit;
-        if (temp<= 15) {
-            outfit = createColdWeatherOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
-        } else {
-            outfit = createHotWeatherOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
-            console.log('outfit:', outfit);
-        }
+        outfit = createOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
+
         
         return outfit;
     }
@@ -50,46 +46,65 @@ const getRandomColors = (items, count) => {
     return colors;
 }
 
-function createColdWeatherOutfit(clothingItems,colors, temp, condition) {
-    const top = getRandomItemByColorAndType(clothingItems,colors, 'Top');
-    const bottom = getRandomItemByColorAndType(clothingItems,colors, 'Bottom');
-    const shoe = getRandomItemByColorAndType(clothingItems,colors, 'Shoes');
-    const outerwear = getRandomItemByColorAndType(clothingItems,colors, 'Outerwear');
+function createOutfit(clothingItems, colors, temp, condition) {
+    const one_piece = getRandomItemByColorAndType(clothingItems, colors, 'One-piece');
+    const top = getRandomItemByColorAndType(clothingItems, colors, 'Top');
+    const bottom = getRandomItemByColorAndType(clothingItems, colors, 'Bottom');
+    const shoe = getRandomItemByColorAndType(clothingItems, colors, 'Shoes');
+    const outerwear = getRandomItemByColorAndType(clothingItems, colors, 'Outerwear');
 
-    return new Outfit({
-        name: `Cold Weather ${condition} - ${colors.join(', ')} Outfit`,
-        items: [
+    let outfits = [];
+
+    if (one_piece && shoe) {
+        let outfit_op1_items = [
+            { id: one_piece._id, imageUrl: one_piece.imageUrl },
+            { id: shoe._id, imageUrl: shoe.imageUrl },
+        ];
+        if (outerwear) {
+            outfit_op1_items.push({ id: outerwear._id, imageUrl: outerwear.imageUrl });
+        }
+
+        let outfit_op1 = new Outfit({
+            items: outfit_op1_items,
+            weatherTemperature: temp,
+            weatherCondition: condition,
+        });
+
+        outfits.push(outfit_op1);
+    }
+
+    if (top && bottom && shoe) {
+        let outfit_op2_items = [
             { id: top._id, imageUrl: top.imageUrl },
             { id: bottom._id, imageUrl: bottom.imageUrl },
             { id: shoe._id, imageUrl: shoe.imageUrl },
-            { id: outerwear._id, imageUrl: outerwear.imageUrl },
-        ],
-        weatherTemperature: temp,
-        weatherCondition: condition,
-    });
-    
+        ];
+        if (outerwear) {
+            outfit_op2_items.push({ id: outerwear._id, imageUrl: outerwear.imageUrl });
+        }
+
+        let outfit_op2 = new Outfit({
+            items: outfit_op2_items,
+            weatherTemperature: temp,
+            weatherCondition: condition,
+        });
+
+        outfits.push(outfit_op2);
+    }
+
+    if (outfits.length === 0) {
+        throw new Error('Could not create any outfits');
+    }
+
+    //randomly choosing one of the outfits
+    let randomIndex = Math.floor(Math.random() * outfits.length);
+    return outfits[randomIndex];
 }
 
-function createHotWeatherOutfit(clothingItems,colors, temp, condition) {
-    const onePiece = getRandomItemByColorAndType(clothingItems,colors, 'One-piece');
-    const shoe = getRandomItemByColorAndType(clothingItems,colors, 'Shoes');
-    const outerwear = getRandomItemByColorAndType(clothingItems,colors, 'Outerwear');
-    
-    return new Outfit({
-        name: `Hot Weather ${condition} - ${colors.join(', ')}   Outfit`,
-        items: [
-            { id: onePiece._id, imageUrl: onePiece.imageUrl },
-            { id: shoe._id, imageUrl: shoe.imageUrl },
-            { id: outerwear._id, imageUrl: outerwear.imageUrl },
-        ],
-        weatherTemperature: temp,
-        weatherCondition: condition, 
-    });
-}
 
 function getRandomItemByColorAndType(clothingItems, colors, type) {
     const items = clothingItems.filter(item => {
-        return colors.includes(item.color) && item.category === type;
+        return colors.flat().includes(item.color[0]) && item.category === type;
     });
 
     if (items.length === 0) {
@@ -98,5 +113,13 @@ function getRandomItemByColorAndType(clothingItems, colors, type) {
 
     const randomIndex = Math.floor(Math.random() * items.length);
     return items[randomIndex];
+}
+
+function getItemsByColorAndType(clothingItems, colors, type) {
+    const items = clothingItems.filter(item => {
+        return item.color.some(color => colors.flat().includes(color)) && item.category === type;
+    });
+
+    return items;
 }
 module.exports = AthleisureOutfitStrategy;
