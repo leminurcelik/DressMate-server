@@ -21,6 +21,7 @@ router.post('/addClothingItem',verifyToken, async (req, res) => {
     }
 });
 
+
 router.post('/addClothingItem',verifyToken, async (req, res) => {
     console.log('req.body:', req.body);
     try {
@@ -34,11 +35,12 @@ router.post('/addClothingItem',verifyToken, async (req, res) => {
 });
 
 
-router.post('/deleteClothingItem',verifyToken, async (req, res) => {
-    console.log('req.body:', req.body._id);
+router.delete('/deleteClothingItem',verifyToken, async (req, res) => {
+    const { itemId } = req.query;
+
     try {
         console.log('req.userId:', req.userId);  
-        const result = await deleteClothingItem(req.userId, req.body._id);
+        const result = await deleteClothingItem(req.userId, itemId);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error:', error);
@@ -46,11 +48,11 @@ router.post('/deleteClothingItem',verifyToken, async (req, res) => {
     }
 });
 
-router.post('/favoriteStatus',verifyToken, async (req, res) => {
-    console.log('req.body._id:', req.body._id);
+router.put('/favoriteStatus',verifyToken, async (req, res) => {
+    const { itemId } = req.query;
     try {
         console.log('req.userId:', req.userId);  
-        const result = await favoriteStatus(req.userId, req.body._id);
+        const result = await favoriteStatus(req.userId, itemId);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error:', error);
@@ -58,11 +60,11 @@ router.post('/favoriteStatus',verifyToken, async (req, res) => {
     }
 });
 
-router.post('/laundryStatus',verifyToken, async (req, res) => {
-    console.log('req.body._id:', req.body._id);
+router.put('/laundryStatus',verifyToken, async (req, res) => {
+    const { itemId } = req.query;
     try {
         console.log('req.userId:', req.userId);  
-        const result = await laundryStatus(req.userId, req.body._id);
+        const result = await laundryStatus(req.userId, itemId);
         res.status(200).json(result);
     } catch (error) {
         console.error('Error:', error);
