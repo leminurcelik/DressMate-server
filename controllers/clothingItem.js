@@ -171,6 +171,42 @@ const getAllClothingItems = async (userId,page, limit) => {
     }
 }
 
+//get items in laundry basket
+const getItemsInLaundryBasket = async (userId, page, limit) => {
+    try {
+        const result = await ClothingItem.find({ userId: userId, isClean: false }).skip((page - 1) * limit).limit(limit);
+        return result;
+    }   
+    catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+//get items in favorites
+const getItemsInFavorites = async (userId, page, limit) => {
+    try {
+        const result = await ClothingItem.find({ userId: userId, isFavorite: true }).skip((page - 1) * limit).limit(limit);
+        return result;
+    }   
+    catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+//get items that are clean
+const getItemsClean = async (userId, page, limit) => {
+    try {
+        const result = await ClothingItem.find({ userId: userId, isClean: true }).skip((page - 1) * limit).limit(limit);
+        return result;
+    }   
+    catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
 //get items by filtering with color and type
 
 
@@ -245,4 +281,4 @@ function mapToCategory(labels) {
 function mapToSubcategory(labels) {
     // Implement your mapping logic here
 }
-module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems, suggestClothingItemDetails};
+module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems, suggestClothingItemDetails, getItemsInLaundryBasket, getItemsInFavorites, getItemsClean};
