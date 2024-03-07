@@ -28,10 +28,15 @@ class romanticFilterStrategy extends baseFilterStrategy{
         }
         console.log('dayWeather:', dayWeather);
 
-        // filter the clothing items by the weather and style
+        const desiredColors = ['Red', 'Blue', 'White', 'Yellow', 'Green'];
+        // filter 
         const filteredItems = clothingItems.filter(item => {
-            return item.wearableWeather === dayWeather
+            return item.wearableWeather === dayWeather 
+                && (item.style === 'Casual' || item.style === 'Formal' || item.style === 'Evening')
+                && (item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')
+                && item.color.some(color => desiredColors.includes(color));
         });
+
         return filteredItems;
     }
 }

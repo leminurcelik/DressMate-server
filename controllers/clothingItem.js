@@ -8,19 +8,49 @@ const addClothingItem = async (userId, clothingItemData) => {
     try {
         const newItem = await ClothingItem.create({
             userId: userId,
-            name: clothingItemData.name,
-            style: clothingItemData.style,
-            color: clothingItemData.color,
-            wearableWeather: clothingItemData.wearableWeather,
             category: clothingItemData.category,
             subcategory: clothingItemData.subcategory,
+            color: clothingItemData.color,
             imageUrl: clothingItemData.imageUrl,
-            isClean: clothingItemData.isClean,
-            isFavorite: clothingItemData.isFavorite,
+            isFavorite: false,
+            isClean: true,
+            name: clothingItemData.name,
+            pattern: clothingItemData.pattern,
+            style: clothingItemData.style,
+            wearableWeather: clothingItemData.wearableWeather,
             details: clothingItemData.details,
         });
         const result = await newItem.save();
         return result;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+// add multiple clothing items
+const addClothingItems = async (userId, clothingItemsData) => {
+    try {
+        const newItemsPromises = clothingItemsData.map(async (itemData) => {
+            const newItem = await ClothingItem.create({
+                userId: userId,
+                category: itemData.category,
+                subcategory: itemData.subcategory,
+                color: itemData.color,
+                imageUrl: itemData.imageUrl,
+                isFavorite: false,
+                isClean: true,
+                name: itemData.name,
+                pattern: itemData.pattern,
+                style: itemData.style,
+                wearableWeather: itemData.wearableWeather,
+                details: itemData.details,
+            });
+            return newItem.save();
+        });
+
+        const results = await Promise.all(newItemsPromises);
+        return results;
     } catch (error) {
         console.error('Error:', error);
         return null;
@@ -179,4 +209,4 @@ const getItemsById = async (itemId, userId) => {
         return null;
     }
 }
-module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem};
+module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems};

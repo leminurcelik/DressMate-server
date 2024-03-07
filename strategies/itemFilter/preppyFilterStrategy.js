@@ -2,8 +2,14 @@ const ClothingItem = require('../../controllers/clothingItem');
 const weather = require('../../controllers/weather');
 const baseFilterStrategy = require('./baseFilterStrategy');
 
+// formal casual evening parçalar olabilir
+// etek elbise formal olacak şekilde olabilir
+//üst blouse seçilsin 
+//
+
 class preppyFilterStrategy extends baseFilterStrategy{
     async filterItems(userId, options){
+        console.log('preppyFilterStrategy geldi');
         // get the weather data
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
 
@@ -23,7 +29,7 @@ class preppyFilterStrategy extends baseFilterStrategy{
         }
         // filter the clothing items by the weather and style
         const filteredItems = clothingItems.filter(item => {
-            return item.wearableWeather === dayWeather 
+            return item.wearableWeather === dayWeather && (item.style === 'Casual' || item.style === 'Formal');
         });
         return filteredItems;
     }
