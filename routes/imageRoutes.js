@@ -29,9 +29,9 @@ router.post('/upload', upload.single('image'),verifyToken, async (req, res) => {
     formData.append('image', req.file.buffer.toString('base64')); // Convert buffer to base64 string
 
     try {
-        const response = await axios.post(`https://api.imgbb.com/1/upload?key=${apiKey}`, formData, {
+        const response = await axios.post(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
             headers: {
-                'content-type': 'multipart/form-data',
+                'Content-Type': 'image/jpeg', // Set the correct content type
             },
         });
         
