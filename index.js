@@ -11,6 +11,7 @@ const auth = require('./routes/userRoutes');
 const weather = require('./routes/weatherRoutes');
 const clothingItem = require('./routes/clothingItemRoutes');
 const outfit = require('./routes/outfitRoutes');
+const image = require('./routes/imageRoutes');
 
 //init
 const app = express();
@@ -24,6 +25,7 @@ app.use(authRouter);
 app.use(auth);
 app.use(weather);
 app.use(clothingItem);
+app.use(image);
 app.use(outfit);
 //app.use(express.json());
 
