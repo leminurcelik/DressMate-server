@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems}= require('../controllers/clothingItem.js');
+const {addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems, getItemsInFavorites, getItemsInLaundryBasket}= require('../controllers/clothingItem.js');
 const {User} = require("../models/userModel.js");
 
 const { verify } = require('jsonwebtoken');
@@ -22,7 +22,7 @@ router.post('/addClothingItem',verifyToken, async (req, res) => {
 });
 
 
-router.post('/addClothingItem',verifyToken, async (req, res) => {
+router.post('/addClothingItems',verifyToken, async (req, res) => {
     console.log('req.body:', req.body);
     try {
         console.log('req.userId:', req.userId);  
@@ -123,6 +123,28 @@ router.get('/getOptions', async (req, res) => {
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ message: error.message});
+    }
+});
+
+router.get('/getItemsInFavorites',verifyToken, async (req, res) => {
+    const { page, limit } = req.query;
+    try {
+        const result = await getItemsInFavorites(req.userId, page, limit);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: "Internal error" });
+    }
+});
+
+router.get('/getItemsInLaundryBasket',verifyToken, async (req, res) => {
+    const { page, limit } = req.query;
+    try {
+        const result = await getItemsInLaundryBasket(req.userId, page, limit);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: "Internal error" });
     }
 });
 

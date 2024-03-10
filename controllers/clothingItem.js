@@ -171,6 +171,42 @@ const getAllClothingItems = async (userId,page, limit) => {
     }
 }
 
+//get items in laundry basket
+const getItemsInLaundryBasket = async (userId, page, limit) => {
+    try {
+        const result = await ClothingItem.find({ userId: userId, isClean: false }).skip((page - 1) * limit).limit(limit);
+        return result;
+    }   
+    catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+//get items in favorites
+const getItemsInFavorites = async (userId, page, limit) => {
+    try {
+        const result = await ClothingItem.find({ userId: userId, isFavorite: true }).skip((page - 1) * limit).limit(limit);
+        return result;
+    }   
+    catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+//get items that are clean
+const getItemsClean = async (userId, page, limit) => {
+    try {
+        const result = await ClothingItem.find({ userId: userId, isClean: true }).skip((page - 1) * limit).limit(limit);
+        return result;
+    }   
+    catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
 //get items by filtering with color and type
 
 
@@ -209,4 +245,40 @@ const getItemsById = async (itemId, userId) => {
         return null;
     }
 }
-module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems};
+
+const suggestClothingItemDetails = async (userId, imageUrl) => {
+    try {
+        // Use the Google Vision API to analyze the image
+        const [result] = await client.labelDetection(imageUrl);
+        const labels = result.labelAnnotations;
+
+        // Map the labels to your clothing categories and subcategories
+        const category = mapToCategory(labels);
+        const subcategory = mapToSubcategory(labels);
+
+        // Create a new item with the suggested details
+        const newItem = new ClothingItem({
+            userId: userId,
+            category: category,
+            subcategory: subcategory,
+            imageUrl: imageUrl,
+            isFavorite: false,
+            isClean: true,
+        });
+
+        // Return the new item without saving it to the database
+        return newItem;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+function mapToCategory(labels) {
+    // Implement your mapping logic here
+}
+
+function mapToSubcategory(labels) {
+    // Implement your mapping logic here
+}
+module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems, suggestClothingItemDetails, getItemsInLaundryBasket, getItemsInFavorites, getItemsClean};
