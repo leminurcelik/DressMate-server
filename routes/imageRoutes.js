@@ -1,6 +1,5 @@
 const express = require('express');
 const multer = require('multer');
-const { addClothingImage }= require('../controllers/image.js');
 
 const { verify } = require('jsonwebtoken');
 const verifyToken = require('../middleware/auth');
