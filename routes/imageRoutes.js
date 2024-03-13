@@ -7,15 +7,6 @@ const verifyToken = require('../middleware/auth');
 
 const router = express.Router();
 
-/* // Set up multer for file upload
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function(req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-}); */
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -40,15 +31,6 @@ router.post('/upload', upload.single('image'),verifyToken, async (req, res) => {
         console.error('Error uploading image:', error);
         return res.status(500).json({ error: 'Failed to upload image' });
     }
-    /* const { filename, path, originalname } = req.file;
-    try {
-        console.log('req.userId:', req.userId);  
-        const result = await addClothingImage(req.userId, filename, path, originalname);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ message: error.message});
-    } */
 });
 
 module.exports = router;
