@@ -9,5 +9,8 @@ module.exports = {
     subCategoriesofOnePiece: ['Dress', 'Jumpsuit'],
     subCategoriesofOuterwear: ['Jacket', 'Coat'],
     weatherOptions: ['Hot', 'Cold'],
-    patternOptions: ['Solid', 'Striped', 'Polka-dot', 'Floral', 'Plaid', 'Checkered']
+    patternOptions: ['Solid', 'Striped', 'Polka-dot', 'Floral', 'Plaid', 'Checkered'],
+    DetailsTop: [ 'fitType', 'sleeveLength', 'neckLine', 'fabricType'], 
+    neckline : ['Round', 'V-neck', 'Turtle-neck', 'Boat-neck', 'Scoop-neck', 'Square-neck', 'Crew-neck'],
+    fitType: ['Oversize', 'Slim-fit', 'Regular']
 };

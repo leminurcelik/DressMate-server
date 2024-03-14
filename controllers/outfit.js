@@ -22,6 +22,7 @@ const generateOutfit = async (userId, options) => {
     try {
         const outfitGenerator = await OutfitGeneratorFactory.createOutfitGenerator(userId, options);
         const result = await outfitGenerator.generateOutfit(userId, options);
+        console.log('result:', result);
         return result;
     } catch (error) {
         console.error('Error:', error.message);

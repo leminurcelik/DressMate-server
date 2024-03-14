@@ -39,7 +39,7 @@ class tomboyFilterStrategy extends baseFilterStrategy{
                 case 'Bottom':
                     return ['Jeans', 'Pants', 'Shorts'].includes(item.subCategory);
                 case 'Outerwear':
-                    return item.style === 'Casual' || item.style === 'Formal';
+                    return item.style === 'Casual';
                 default:
                     return false;
             }

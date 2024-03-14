@@ -10,10 +10,10 @@ class TomboyOutfitStrategy extends baseOutfitStrategy {
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
         console.log('weatherData:', weatherData);
 
-        const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'tomboy');
+        //const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'tomboy');
 
         // filter the clothing items by the weather and style
-        const filteredItems = await itemFilterGenerator.filterItems(userId, options);
+        const filteredItems = await filterItems(userId, options);
         console.log('filteredItems:', filteredItems);
 
 
@@ -26,6 +26,44 @@ class TomboyOutfitStrategy extends baseOutfitStrategy {
         let outfit;
         outfit = createOutfit(filteredItems, selectedColors, weatherData.temperature, weatherData.condition);
     }
+}
+
+async function filterItems(userId, options){
+    // get the weather data
+    const weatherData = await weather.getTemperature(options.location, options.date, options.time);
+
+    // get the clothing items of the user
+    const clothingItems = await ClothingItem.getAllClothingItems(userId);
+
+    // get the temperature
+    const temp = weatherData.temperature;
+
+    // get the weather condition
+    let dayWeather;
+    if (temp >= 15 ) {
+        dayWeather = "Hot";
+    }
+    else {
+        dayWeather = "Cold";
+    }
+    // filter the clothing items by the weather and style
+    const filteredItems = clothingItems.filter(item => {
+        if (item.wearableWeather !== dayWeather || item.details.fit_type !== 'Oversize'|| item.isClean === false) {
+            return false;
+        }
+    
+        switch (item.category) {
+            case 'Top':
+                return item.style === 'Casual';
+            case 'Bottom':
+                return ['Jeans', 'Pants', 'Shorts'].includes(item.subCategory);
+            case 'Outerwear':
+                return item.style === 'Casual';
+            default:
+                return false;
+        }
+    });
+    return filteredItems;
 }
 
 
