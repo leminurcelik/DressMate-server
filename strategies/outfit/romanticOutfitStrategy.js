@@ -159,7 +159,8 @@ async function filterItems(userId, options) {
         return item.wearableWeather === dayWeather 
             && (item.style === 'Casual' || item.style === 'Formal' || item.style === 'Evening')
             && (item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')
-            && item.color.some(color => desiredColors.includes(color));
+            && item.color.some(color => desiredColors.includes(color))
+            && item.isClean !== false;
     });
 
     return filteredItems;

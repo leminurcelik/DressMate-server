@@ -143,7 +143,7 @@ async function filterItems(userId, options) {
             }
             // filter the clothing items by the weather and style
             const filteredItems = clothingItems.filter(item => {
-                if (item.wearableWeather !== dayWeather) {
+                if (item.wearableWeather !== dayWeather|| item.isClean === false) {
                     return false;
                 }
             
