@@ -35,7 +35,7 @@ class athleisureFilterStrategy extends baseFilterStrategy{
         
             switch (item.category) {
                 case 'One-piece':
-                    return item.style === 'Sportswear' || item.style === 'Formal' || item.style === 'Evening';
+                    return item.style === 'Sportswear' || item.style === 'Casual';
                 case 'Top':
                     return item.style === 'Casual' || item.style === 'Sportswear';
                 case 'Bottom':
@@ -51,5 +51,6 @@ class athleisureFilterStrategy extends baseFilterStrategy{
         return filteredItems;
     }
 }
+
 
 module.exports = athleisureFilterStrategy;

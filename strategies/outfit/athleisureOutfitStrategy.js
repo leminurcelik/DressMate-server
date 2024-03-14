@@ -12,10 +12,10 @@ class AthleisureOutfitStrategy extends baseOutfitStrategy {
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
         console.log('weatherData:', weatherData);
 
-        const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'athleisure');
+        //const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'athleisure');
 
         // filter the clothing items by the weather and style
-        const filteredItems = await itemFilterGenerator.filterItems(userId, options);
+        const filteredItems = await filterItems(userId, options);
         console.log('filteredItems:', filteredItems);
 
 
@@ -121,5 +121,48 @@ function getItemsByColorAndType(clothingItems, colors, type) {
     });
 
     return items;
+}
+
+async function filterItems(userId, options) {
+            // get the weather data
+            const weatherData = await weather.getTemperature(options.location, options.date, options.time);
+
+            // get the clothing items of the user
+            const clothingItems = await ClothingItem.getAllClothingItems(userId);
+    
+            // get the temperature
+            const temp = weatherData.temperature;
+    
+            // get the weather condition
+            let dayWeather;
+            if (temp >= 15 ) {
+                dayWeather = "Hot";
+            }
+            else {
+                dayWeather = "Cold";
+            }
+            // filter the clothing items by the weather and style
+            const filteredItems = clothingItems.filter(item => {
+                if (item.wearableWeather !== dayWeather) {
+                    return false;
+                }
+            
+                switch (item.category) {
+                    case 'One-piece':
+                        return item.style === 'Sportswear' || item.style === 'Casual';
+                    case 'Top':
+                        return item.style === 'Casual' || item.style === 'Sportswear';
+                    case 'Bottom':
+                        return item.style === 'Sportswear';
+                    case 'Shoes':
+                        return item.style === 'Casual' || item.style === 'Sportswear';
+                    case 'Outerwear':
+                        return item.style === 'Formal' || item.style === 'Casual';
+                    default:
+                        return false;
+                }
+            });
+            return filteredItems;
+    
 }
 module.exports = AthleisureOutfitStrategy;

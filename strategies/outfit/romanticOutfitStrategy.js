@@ -20,10 +20,10 @@ class RomanticOutfitStrategy extends baseOutfitStrategy {
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
         console.log('weatherData:', weatherData);
 
-        const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'romantic');
+        //const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'romantic');
 
         // filter the clothing items by the weather and style
-        const filteredItems = await itemFilterGenerator.filterItems(userId, options);
+        const filteredItems = await filterItems(userId, options);
 
 
         //console.log('filteredItems:', filteredItems);
@@ -34,8 +34,7 @@ class RomanticOutfitStrategy extends baseOutfitStrategy {
         let outfit;
         outfit = createOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
         console.log('outfit in romantic:', outfit);
-
-        
+ 
         return outfit;
     }
        
@@ -127,6 +126,43 @@ function getItemsByColorAndType(clothingItems, colors, type) {
     });
 
     return items;
+}
+
+async function filterItems(userId, options) {
+    console.log('came to romanticFilter');
+    console.log('options:', options);
+
+    // get the weather data
+    const weatherData = await weather.getTemperature(options.location, options.date, options.time);
+
+
+    // get the clothing items of the user
+    const clothingItems = await ClothingItem.getAllClothingItems(userId);
+
+
+    // get the temperature
+    const temp = weatherData.temperature;
+
+    // get the weather condition
+    let dayWeather;
+    if (temp >= 15 ) {
+        dayWeather = "Hot";
+    }
+    else {
+        dayWeather = "Cold";
+    }
+    console.log('dayWeather:', dayWeather);
+
+    const desiredColors = ['Red', 'Blue', 'White', 'Yellow', 'Green'];
+    // filter 
+    const filteredItems = clothingItems.filter(item => {
+        return item.wearableWeather === dayWeather 
+            && (item.style === 'Casual' || item.style === 'Formal' || item.style === 'Evening')
+            && (item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')
+            && item.color.some(color => desiredColors.includes(color));
+    });
+
+    return filteredItems;
 }
 module.exports = RomanticOutfitStrategy;
 
