@@ -10,7 +10,11 @@ module.exports = {
     subCategoriesofOuterwear: ['Jacket', 'Coat'],
     weatherOptions: ['Hot', 'Cold'],
     patternOptions: ['Solid', 'Striped', 'Polka-dot', 'Floral', 'Plaid', 'Checkered'],
-    DetailsTop: [ 'fitType', 'sleeveLength', 'neckLine', 'fabricType'], 
-    neckline : ['Round', 'V-neck', 'Turtle-neck', 'Boat-neck', 'Scoop-neck', 'Square-neck', 'Crew-neck'],
-    fitType: ['Oversize', 'Slim-fit', 'Regular']
+    DetailsTop: [ 'fitType', 'sleeveLength'],
+    detailsBottom: ['bottomLength', 'waistType'],
+    fitType: ['Oversize', 'Slim-fit', 'Regular'],
+    sleeveLength: ['Short', 'Long'],
+    bottomLength: ['Short', 'Midi', 'Maxi'],
+    waistType:  ['High-rise', 'Low-rise', 'Normal']
+
 };
