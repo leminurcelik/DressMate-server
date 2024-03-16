@@ -15,6 +15,7 @@ module.exports = {
     fitType: ['Oversize', 'Slim-fit', 'Regular'],
     sleeveLength: ['Short', 'Long'],
     bottomLength: ['Short', 'Midi', 'Maxi'],
-    waistType:  ['High-rise', 'Low-rise', 'Normal']
+    waistType:  ['High-rise', 'Low-rise', 'Normal'],
+    timeOptions: ['Morning', 'Afternoon', 'Evening']
 
 };
