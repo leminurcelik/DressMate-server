@@ -14,7 +14,7 @@ class TomboyOutfitStrategy extends baseOutfitStrategy {
 
         // filter the clothing items by the weather and style
         const filteredItems = await filterItems(userId, options);
-        console.log('filteredItems:', filteredItems);
+        //console.log('filteredItems:', filteredItems);
 
 
         //console.log('filteredItems:', filteredItems);
@@ -24,7 +24,10 @@ class TomboyOutfitStrategy extends baseOutfitStrategy {
         // create the outfit
         let temp = weatherData.temperature;
         let outfit;
+        //console.log('filterewd items IN TOMBOY:', filteredItems);
         outfit = createOutfit(filteredItems, selectedColors, weatherData.temperature, weatherData.condition);
+        console.log('outfit in tomboy:', outfit);
+        return outfit;
     }
 }
 
@@ -46,22 +49,28 @@ async function filterItems(userId, options){
     else {
         dayWeather = "Cold";
     }
+
+    let styleOptions;
+    switch (options.style) {
+        case 'Evening':
+            styleOptions = ['Formal', 'Evening'];
+            break;
+        case 'Sportswear':
+        case 'Casual':
+            styleOptions = ['Casual', 'Sportswear'];
+            break;
+        case 'Formal':
+            styleOptions = ['Formal'];
+            break;
+        default:
+            styleOptions = [];
+    }
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
-        if (item.wearableWeather !== dayWeather || item.details.fit_type !== 'Oversize'|| item.isClean === false) {
+        if (item.wearableWeather !== dayWeather || (item.category !== 'Shoes' && item.details && item.details.fit_type != 'Oversize') || item.isClean === false || !styleOptions.includes(item.style)) {
             return false;
         }
-    
-        switch (item.category) {
-            case 'Top':
-                return item.style === 'Casual';
-            case 'Bottom':
-                return ['Jeans', 'Pants', 'Shorts'].includes(item.subCategory);
-            case 'Outerwear':
-                return item.style === 'Casual';
-            default:
-                return false;
-        }
+
     });
     return filteredItems;
 }
@@ -75,7 +84,6 @@ const getRandomColors = (items, count) => {
         const color = allColors[Math.floor(Math.random() * allColors.length)];
             colors.push(color);
     }
-    console.log('colors:', colors);
     return colors;
 }
 
@@ -89,6 +97,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
     let outfits = [];
 
     if (one_piece && shoe) {
+        console.log('one_piece and shoe in tomboy:');
         let outfit_op1_items = [
             { id: one_piece._id, imageUrl: one_piece.imageUrl },
             { id: shoe._id, imageUrl: shoe.imageUrl },
@@ -107,6 +116,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
     }
 
     if (top && bottom && shoe) {
+        console.log('top, bottom and shoe in tomboy:');
         let outfit_op2_items = [
             { id: top._id, imageUrl: top.imageUrl },
             { id: bottom._id, imageUrl: bottom.imageUrl },

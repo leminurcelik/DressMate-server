@@ -16,7 +16,7 @@ class AthleisureOutfitStrategy extends baseOutfitStrategy {
 
         // filter the clothing items by the weather and style
         const filteredItems = await filterItems(userId, options);
-        console.log('filteredItems:', filteredItems);
+        //console.log('filteredItems:', filteredItems);
 
 
         //console.log('filteredItems:', filteredItems);
@@ -141,9 +141,10 @@ async function filterItems(userId, options) {
             else {
                 dayWeather = "Cold";
             }
+    
             // filter the clothing items by the weather and style
             const filteredItems = clothingItems.filter(item => {
-                if (item.wearableWeather !== dayWeather|| item.isClean === false) {
+                if (item.wearableWeather != dayWeather|| item.isClean === false) {
                     return false;
                 }
             
