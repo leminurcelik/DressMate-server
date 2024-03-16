@@ -17,5 +17,4 @@ module.exports = {
     bottomLength: ['Short', 'Midi', 'Maxi'],
     waistType:  ['High-rise', 'Low-rise', 'Normal'],
     timeOptions: ['Morning', 'Afternoon', 'Evening']
-
 };
