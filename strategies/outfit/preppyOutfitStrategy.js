@@ -52,6 +52,21 @@ async function filterItems(userId, options){
     else {
         dayWeather = "Cold";
     }
+    let styleOptions;
+    switch (options.style) {
+    case 'Evening':
+        styleOptions = ['Formal', 'Evening'];
+        break;
+    case 'Sportswear':
+    case 'Casual':
+        styleOptions = ['Casual', 'Sportswear'];
+        break;
+    case 'Formal':
+        styleOptions = ['Formal'];
+        break;
+    default:
+        styleOptions = [];
+    }
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
         return item.wearableWeather === dayWeather && (item.style === 'Casual' || item.style === 'Formal'|| item.isClean === false);

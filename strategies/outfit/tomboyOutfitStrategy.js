@@ -49,24 +49,28 @@ async function filterItems(userId, options){
     else {
         dayWeather = "Cold";
     }
+
+    let styleOptions;
+    switch (options.style) {
+        case 'Evening':
+            styleOptions = ['Formal', 'Evening'];
+            break;
+        case 'Sportswear':
+        case 'Casual':
+            styleOptions = ['Casual', 'Sportswear'];
+            break;
+        case 'Formal':
+            styleOptions = ['Formal'];
+            break;
+        default:
+            styleOptions = [];
+    }
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
-        if (item.wearableWeather !== dayWeather || (item.category !== 'Shoes' && item.details && item.details.fit_type != 'Oversize') || item.isClean === false) {
+        if (item.wearableWeather !== dayWeather || (item.category !== 'Shoes' && item.details && item.details.fit_type != 'Oversize') || item.isClean === false || !styleOptions.includes(item.style)) {
             return false;
         }
-    
-        switch (item.category) {
-            case 'Top':
-                return item.style === 'Casual' || item.style === 'Sportswear';
-            case 'Bottom':
-                return ['Jeans', 'Pants', 'Shorts'].includes(item.subcategory);
-            case 'Outerwear':
-                return item.style === 'Casual';
-            case 'Shoes':
-                return ['Casual', 'Sportswear'].includes(item.style);
-            default:
-                return false;
-        }
+
     });
     return filteredItems;
 }
