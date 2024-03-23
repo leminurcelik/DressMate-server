@@ -6,8 +6,11 @@ const verifyToken = require('../middleware/auth');
 
 const router = express.Router();
 
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+const { suggestClothingItemDetails, rgbToHsl, getColorBucket } = require('../controllers/image');
 
 // Upload endpoint
 router.post('/upload', upload.single('image'),verifyToken, async (req, res) => {
@@ -31,5 +34,29 @@ router.post('/upload', upload.single('image'),verifyToken, async (req, res) => {
         return res.status(500).json({ error: 'Failed to upload image' });
     }
 });
+
+
+
+// Suggest clothing item details endpoint
+router.get('/suggestClothingItemDetails', verifyToken, async (req, res) => {
+    const { imageUrl } = req.query;
+    const userId = req.userId;
+
+    try {
+        const objects = await suggestClothingItemDetails(userId, imageUrl);
+        return res.status(200).json({ objects });
+    } catch (error) {
+        console.error('Error suggesting clothing item details:', error.message);
+        return res.status(500).json({ error: 'Failed to suggest clothing item details' });
+    }
+});
+
+router.get('/getColorBucket', verifyToken, async (req, res) => {
+    const { r, g, b } = req.query;
+    const hsl = rgbToHsl(r, g, b);
+    const bucket = getColorBucket(hsl);
+    return res.status(200).json({ bucket });
+}); 
+
 
 module.exports = router;
