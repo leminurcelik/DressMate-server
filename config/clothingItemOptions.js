@@ -5,7 +5,7 @@ module.exports = {
     categoryOptions: ['Top', 'Bottom', 'Shoes', 'One-piece', 'Outerwear'],
     subCategoriesofTop: ['T-shirt', 'Blouse', 'Sweater'],
     subCategoriesofBottom: ['Pants', 'Shorts', 'Jeans', 'Skirt'],
-    subCategoriesofShoes: ['Sneakers', 'Sandals', 'Boots'],
+    subCategoriesofShoes: ['Sneakers', 'Sandal', 'Boots'],
     subCategoriesofOnePiece: ['Dress', 'Jumpsuit'],
     subCategoriesofOuterwear: ['Jacket', 'Coat'],
     weatherOptions: ['Hot', 'Cold'],

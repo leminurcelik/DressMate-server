@@ -32,15 +32,16 @@ const suggestClothingItemDetails = async (userId, imageUrl) => {
         // Extract object localization
         const objects = result.localizedObjectAnnotations;
 
+
         // Create a mapping of subcategories to categories
         const categoryMapping = {
             'T-shirt': 'Top',
             'Blouse': 'Top',
             'Sweater': 'Top',
             'Pants': 'Bottom',
-            'Shorts': 'Bottom',
+            'Short': 'Bottom',
             'Jeans': 'Bottom',
-            'Skirt': 'Bottom',
+            'Skirts': 'Bottom',
             'Sneakers': 'Shoes',
             'Sandals': 'Shoes',
             'Boots': 'Shoes',
@@ -48,27 +49,32 @@ const suggestClothingItemDetails = async (userId, imageUrl) => {
             'Jumpsuit': 'One-piece',
             'Jacket': 'Outerwear',
             'Coat': 'Outerwear',
+            'Shoe': 'Shoes',
+            'Boot': 'Shoes',
         };
+
 
         let detectedCategory = null;
         let detectedSubcategory = null;
-
-        objects.forEach(object => {
-            const objectName = object.name;
-            if (categoryMapping[objectName]) {
-                detectedCategory = categoryMapping[objectName];
-                detectedSubcategory = objectName;
-            }
-        });
+        let detectedColors = [];
 
         // Extract dominant colors
         const colors = result.imagePropertiesAnnotation.dominantColors.colors;
         colors.forEach(color => {
-            console.log(`Color: ${color.color}`);
-            console.log(`Score: ${color.score}`);
+            detectedColors.push(color.color);
         });
 
-        return { category: detectedCategory, subcategory: detectedSubcategory };
+        for (let i = 0; i < objects.length; i++) {
+            const objectName = objects[i].name;
+            if (objectName === 'Top' || objectName === 'Bottom' || objectName === 'Shoes' || objectName === 'One-piece' || objectName === 'Outerwear') {
+                detectedCategory = objectName;
+            } else if (categoryMapping[objectName]) {
+                detectedCategory = categoryMapping[objectName];
+                detectedSubcategory = objectName;
+            }
+        }
+
+        return { category: detectedCategory, subcategory: detectedSubcategory, objects, colors: detectedColors };
     } catch (error) {
         console.error('Error:', error);
         return null;
@@ -93,27 +99,23 @@ function rgbToHsl(r, g, b) {
         h /= 6;
     }
 
-    return { h: h * 360, s: s * 100, l: l * 100 };
+    return [h, s, l];
 }
 
-function getColorBucket(h, s, l) {
-    if (s < 20) return 'gray';
-    if (l < 30) return 'black';  // Lowered lightness threshold for 'black'
-    if (l > 80) return 'white';
-    if (h < 30) return 'red';
-    if (h < 60) return 'orange';
-    if (h < 90) return 'yellow';
-    if (h < 150) return 'green';
-    if (h < 210) return 'cyan';
-    if (h < 270) return 'blue';
-    if (h < 330) return 'purple';
-    return 'pink';
+function getColorBucket(hsl) {
+    const h = hsl[0] * 360;  // Convert to degrees
+    const s = hsl[1];
+    const l = hsl[2];
+
+    if (l < 0.16) return 'Black';
+    if (l > 0.9) return 'White';
+
+    if (h < 30) return 'Red';
+    if (h < 90) return 'Yellow';
+    if (h < 150) return 'Green';
+    if (h < 240) return 'Blue';
+    if (h < 330) return 'Pink';
+    return 'Red';  // For h >= 330
 }
-
-const color = { red: 240, green: 159, blue: 187 };
-const hsl = rgbToHsl(color.red, color.green, color.blue);
-const colorBucket = getColorBucket(hsl.h, hsl.s, hsl.l);
-
-console.log(colorBucket);  // Outputs: 'pink'
 
 module.exports = { suggestClothingItemDetails, rgbToHsl, getColorBucket};
