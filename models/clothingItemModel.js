@@ -29,11 +29,11 @@ const clothingItemSchema = new mongoose.Schema({
         required: true,
         enum: clothingItemOptions.patternOptions,
     },
-    wearableWeather: {
+    wearableWeather: [{
         type: String,
         required: true,
         enum: clothingItemOptions.wearableWeatherOptions,
-    },
+    }],
     category: { // top, bottom, shoes, one-piece, accessory, outerwear
         type: String,
         required: true,
