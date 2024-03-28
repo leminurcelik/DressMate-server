@@ -25,8 +25,8 @@ class ThreeColorStrategy extends baseOutfitStrategy {
         }
         // filter the clothing items by the weather and style
         const filteredItems = clothingItems.filter(item => {
-            return item.wearableWeather === dayWeather &&
-                   item.style === options.style
+            return item.wearableWeather.includes(dayWeather) &&
+                   item.style === options.style;
         });
         // get 3 random colors     
         const selectedColors = getRandomColors(filteredItems, 3);

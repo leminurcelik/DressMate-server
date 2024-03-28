@@ -178,7 +178,7 @@ async function filterItems(userId, options) {
     const desiredColors = ['Red', 'Blue', 'White', 'Yellow', 'Green'];
     // filter 
     const filteredItems = clothingItems.filter(item => {
-        return item.wearableWeather === dayWeather 
+        return item.wearableWeather.includes(dayWeather) 
             && (item.style === 'Casual' || item.style === 'Formal' || item.style === 'Evening')
             && (item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')
             && item.color.some(color => desiredColors.includes(color))

@@ -67,7 +67,7 @@ async function filterItems(userId, options){
     }
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
-        if (item.wearableWeather !== dayWeather || (item.category !== 'Shoes' && item.details && item.details.fit_type != 'Oversize') || item.isClean === false || !styleOptions.includes(item.style)) {
+        if (!item.wearableWeather.includes(dayWeather) || (item.category !== 'Shoes' && item.details && item.details.fit_type != 'Oversize') || item.isClean === false || !styleOptions.includes(item.style)) {
             return false;
         }
 
