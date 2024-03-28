@@ -1,6 +1,10 @@
 const clothingItemOptions = require('../config/clothingItemOptions.js');
 const mongoose = require("mongoose");
 const clothingItemSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId, // The user that owns the clothing item
         required: true,
