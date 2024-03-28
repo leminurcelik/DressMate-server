@@ -99,11 +99,11 @@ function createOutfit(clothingItems, colors, temp, condition) {
     if (one_piece && shoe) {
         console.log('one_piece and shoe in tomboy:');
         let outfit_op1_items = [
-            { id: one_piece._id, imageUrl: one_piece.imageUrl },
-            { id: shoe._id, imageUrl: shoe.imageUrl },
+            { id: one_piece._id, imageUrl: one_piece.imageUrl, category: one_piece.category},
+            { id: shoe._id, imageUrl: shoe.imageUrl, category: shoe.category},
         ];
         if (outerwear) {
-            outfit_op1_items.push({ id: outerwear._id, imageUrl: outerwear.imageUrl });
+            outfit_op1_items.push({ id: outerwear._id, imageUrl: outerwear.imageUrl , category: outerwear.category});
         }
 
         let outfit_op1 = new Outfit({
@@ -118,12 +118,12 @@ function createOutfit(clothingItems, colors, temp, condition) {
     if (top && bottom && shoe) {
         console.log('top, bottom and shoe in tomboy:');
         let outfit_op2_items = [
-            { id: top._id, imageUrl: top.imageUrl },
-            { id: bottom._id, imageUrl: bottom.imageUrl },
-            { id: shoe._id, imageUrl: shoe.imageUrl },
+            { id: top._id, imageUrl: top.imageUrl, category: top.category},
+            { id: bottom._id, imageUrl: bottom.imageUrl, category: bottom.category},
+            { id: shoe._id, imageUrl: shoe.imageUrl, category: shoe.category},
         ];
         if (outerwear) {
-            outfit_op2_items.push({ id: outerwear._id, imageUrl: outerwear.imageUrl });
+            outfit_op2_items.push({ id: outerwear._id, imageUrl: outerwear.imageUrl, category: outerwear.category});
         }
 
         let outfit_op2 = new Outfit({
