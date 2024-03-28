@@ -76,7 +76,17 @@ const suggestClothingItemDetails = async (userId, imageUrl) => {
 
         let color = getColorBucket(rgbToHsl(detectedColors[0].red, detectedColors[0].green, detectedColors[0].blue));
 
-        return { category: detectedCategory, subcategory: detectedSubcategory, color: color};
+        let name = '';
+        if (color) {
+            name += color + ' ';
+        }
+        if (detectedSubcategory) {
+            name += detectedSubcategory;
+        } else if (detectedCategory) {
+            name += detectedCategory;
+        }
+
+        return { name: name.trim(), category: detectedCategory, subcategory: detectedSubcategory, color: color};
     } catch (error) {
         console.error('Error:', error);
         return null;
