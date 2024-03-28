@@ -65,6 +65,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
         }
 
         let outfit_op1 = new Outfit({
+            name: `${one_piece.name} outfit`,
             items: outfit_op1_items,
             weatherTemperature: temp,
             weatherCondition: condition,
@@ -84,6 +85,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
         }
 
         let outfit_op2 = new Outfit({
+            name: `${top.name} - ${bottom.name} outfit`,
             items: outfit_op2_items,
             weatherTemperature: temp,
             weatherCondition: condition,
