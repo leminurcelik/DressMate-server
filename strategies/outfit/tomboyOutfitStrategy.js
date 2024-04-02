@@ -8,7 +8,7 @@ class TomboyOutfitStrategy extends baseOutfitStrategy {
 
         // get the weather data
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
-        console.log('weatherData:', weatherData);
+        //console.log('weatherData:', weatherData);
 
         //const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'tomboy');
 
@@ -26,7 +26,7 @@ class TomboyOutfitStrategy extends baseOutfitStrategy {
         let outfit;
         //console.log('filterewd items IN TOMBOY:', filteredItems);
         outfit = createOutfit(filteredItems, selectedColors, weatherData.temperature, weatherData.condition);
-        console.log('outfit in tomboy:', outfit);
+        //console.log('outfit in tomboy:', outfit);
         return outfit;
     }
 }
@@ -97,7 +97,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
     let outfits = [];
 
     if (one_piece && shoe) {
-        console.log('one_piece and shoe in tomboy:');
+        //console.log('one_piece and shoe in tomboy:');
         let outfit_op1_items = [
             { id: one_piece._id, imageUrl: one_piece.imageUrl, category: one_piece.category},
             { id: shoe._id, imageUrl: shoe.imageUrl, category: shoe.category},
@@ -111,13 +111,14 @@ function createOutfit(clothingItems, colors, temp, condition) {
             items: outfit_op1_items,
             weatherTemperature: temp,
             weatherCondition: condition,
+            strategy: 'tomboy'
         });
 
         outfits.push(outfit_op1);
     }
 
     if (top && bottom && shoe) {
-        console.log('top, bottom and shoe in tomboy:');
+        //console.log('top, bottom and shoe in tomboy:');
         let outfit_op2_items = [
             { id: top._id, imageUrl: top.imageUrl, category: top.category},
             { id: bottom._id, imageUrl: bottom.imageUrl, category: bottom.category},
@@ -132,6 +133,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
             items: outfit_op2_items,
             weatherTemperature: temp,
             weatherCondition: condition,
+            strategy: 'tomboy'
         });
 
         outfits.push(outfit_op2);
