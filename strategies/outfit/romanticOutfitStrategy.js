@@ -14,10 +14,10 @@ const weather = require('../../controllers/weather');
 
 class RomanticOutfitStrategy extends baseOutfitStrategy {
     async generateOutfit(userId, options) {
-        console.log('romanticOutfitStrategy');
+        //console.log('romanticOutfitStrategy');
         // get the weather data
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
-        console.log('weatherData:', weatherData);
+        //console.log('weatherData:', weatherData);
 
         //const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'romantic');
 
@@ -32,7 +32,7 @@ class RomanticOutfitStrategy extends baseOutfitStrategy {
         
         let outfit;
         outfit = createOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
-        console.log('outfit in romantic:', outfit);
+        //console.log('outfit in romantic:', outfit);
  
         return outfit;
     }
@@ -47,12 +47,12 @@ const getRandomColors = (items, count) => {
         const color = allColors[Math.floor(Math.random() * allColors.length)];
             colors.push(color);
     }
-    console.log('colors:', colors);
+    //console.log('colors:', colors);
     return colors;
 }
 
 function createOutfit(clothingItems, colors, temp, condition) {
-    console.log('CAME TO CREATE OUTFIT IN ROMANTIC STRATEGY');
+    //console.log('CAME TO CREATE OUTFIT IN ROMANTIC STRATEGY');
     const one_piece = getRandomItemByColorAndType(clothingItems, colors, 'One-piece');
     const top = getRandomItemByColorAndType(clothingItems, colors, 'Top');
     const bottom = getRandomItemByColorAndType(clothingItems, colors, 'Bottom');
@@ -62,9 +62,9 @@ function createOutfit(clothingItems, colors, temp, condition) {
     let outfits = [];
 
     if (one_piece && shoe) {
-        console.log('CAME TO ONEPİECE AND SHOEEE')
-        console.log('one_piece:', one_piece.category);
-        console.log('shoe:', shoe.category);
+        //console.log('CAME TO ONEPİECE AND SHOEEE')
+        //console.log('one_piece:', one_piece.category);
+        //console.log('shoe:', shoe.category);
         let outfit_op1_items = [
             { id: one_piece._id, imageUrl: one_piece.imageUrl, category: one_piece.category },
             { id: shoe._id, imageUrl: shoe.imageUrl, category: shoe.category},
@@ -78,16 +78,17 @@ function createOutfit(clothingItems, colors, temp, condition) {
             items: outfit_op1_items,
             weatherTemperature: temp,
             weatherCondition: condition,
+            strategy: 'romantic'
         });
 
         outfits.push(outfit_op1);
     }
 
     if (top && bottom && shoe) {
-        console.log('CAME TO TOP AND BOTTOM AND SHOEEE')
-        console.log('top:', top.category);
-        console.log('bottom:', bottom.category);
-        console.log('shoe:', shoe.category);
+        //console.log('CAME TO TOP AND BOTTOM AND SHOEEE')
+        //console.log('top:', top.category);
+        //console.log('bottom:', bottom.category);
+        //console.log('shoe:', shoe.category);
         let outfit_op2_items = [
             { id: top._id, imageUrl: top.imageUrl, category: top.category},
             { id: bottom._id, imageUrl: bottom.imageUrl , category: bottom.category},
@@ -102,6 +103,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
             items: outfit_op2_items,
             weatherTemperature: temp,
             weatherCondition: condition,
+            strategy: 'romantic'
         });
 
         outfits.push(outfit_op2);
@@ -138,8 +140,8 @@ function getItemsByColorAndType(clothingItems, colors, type) {
 }
 
 async function filterItems(userId, options) {
-    console.log('came to romanticFilter');
-    console.log('options:', options);
+    //console.log('came to romanticFilter');
+    //console.log('options:', options);
 
     // get the weather data
     const weatherData = await weather.getTemperature(options.location, options.date, options.time);
@@ -175,7 +177,7 @@ async function filterItems(userId, options) {
     default:
         styleOptions = [];
     }
-    console.log('dayWeather:', dayWeather);
+    //console.log('dayWeather:', dayWeather);
 
     const desiredColors = ['Red', 'Blue', 'White', 'Yellow', 'Green'];
     // filter 

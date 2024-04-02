@@ -107,7 +107,8 @@ function createOutfit(clothingItems, colors, temp, condition) {
             name: `${one_piece.name} outfit`,
             items: outfit_op1_items,
             weatherTemperature: temp,
-            weatherCondition: condition
+            weatherCondition: condition,
+            strategy: 'preppy'
         });
 
         outfits.push(outfit_op1);
@@ -127,7 +128,8 @@ function createOutfit(clothingItems, colors, temp, condition) {
             name: `${top.name} - ${bottom.name} outfit`,
             items: outfit_op2_items,
             weatherTemperature: temp,
-            weatherCondition: condition
+            weatherCondition: condition,
+            strategy: 'preppy'
         });
 
         outfits.push(outfit_op2);

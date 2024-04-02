@@ -6,11 +6,11 @@ const weather = require('../../controllers/weather');
 class AthleisureOutfitStrategy extends baseOutfitStrategy {
    
     async generateOutfit(userId, options) {
-        console.log('AthleisureOutfitStrategy');
+        //console.log('AthleisureOutfitStrategy');
 
         // get the weather data
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
-        console.log('weatherData:', weatherData);
+        //console.log('weatherData:', weatherData);
 
         //const itemFilterGenerator = itemFilterFactory.ItemFilterFactory(userId, options, 'athleisure');
 
@@ -42,7 +42,7 @@ const getRandomColors = (items, count) => {
         const color = allColors[Math.floor(Math.random() * allColors.length)];
             colors.push(color);
     }
-    console.log('colors:', colors);
+    //console.log('colors:', colors);
     return colors;
 }
 
@@ -69,6 +69,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
             items: outfit_op1_items,
             weatherTemperature: temp,
             weatherCondition: condition,
+            strategy: 'athleisure'
         });
 
         outfits.push(outfit_op1);
@@ -89,6 +90,7 @@ function createOutfit(clothingItems, colors, temp, condition) {
             items: outfit_op2_items,
             weatherTemperature: temp,
             weatherCondition: condition,
+            strategy: 'athleisure'
         });
 
         outfits.push(outfit_op2);
