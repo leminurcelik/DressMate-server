@@ -24,14 +24,22 @@ class RomanticOutfitStrategy extends baseOutfitStrategy {
         // filter the clothing items by the weather and style
         const filteredItems = await filterItems(userId, options);
 
-
-        //console.log('filteredItems:', filteredItems);
-        // get 3 random colors     
-        const selectedColors = getRandomColors(filteredItems, 3);
-
         
         let outfit;
-        outfit = createOutfit(filteredItems,selectedColors, weatherData.temperature, weatherData.condition);
+        let attempts=0;
+        let maxAttempts = 3;
+        while (!outfit && attempts < maxAttempts) {
+            const selectedColors = getRandomColors(filteredItems, 3);
+            try {
+                outfit = createOutfit(filteredItems, selectedColors, weatherData.temperature, weatherData.condition);
+            } catch (error) {
+                attempts++;
+            }
+        }
+
+        if (!outfit) {
+            throw new Error('Could not create any outfits after ' + maxAttempts + ' attempts');
+        }
         //console.log('outfit in romantic:', outfit);
  
         return outfit;
@@ -118,10 +126,17 @@ function createOutfit(clothingItems, colors, temp, condition) {
     return outfits[randomIndex];
 }
 
-function getRandomItemByColorAndType(clothingItems, colors, type) {
-    const items = clothingItems.filter(item => {
+ function getRandomItemByColorAndType(clothingItems, colors, type) {
+    let items = clothingItems.filter(item => {
         return colors.flat().includes(item.color[0]) && item.category === type;
     });
+
+    // Get favorite items
+    const favoriteItems = items.filter(item => item.isFavorite);
+    console.log('favoriteItems:', favoriteItems);
+
+    // Duplicate favorite items to increase their chance of being selected
+    items = items.map(item => favoriteItems.includes(item) ? [item, item] : [item]).flat();
 
     if (items.length === 0) {
         return undefined;
