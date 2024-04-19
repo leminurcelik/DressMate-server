@@ -66,7 +66,7 @@ function createOutfit(clothingItems, temp, condition) {
                 items: outfit_op1_items,
                 weatherTemperature: temp,
                 weatherCondition: condition,
-                strategy: 'romantic'
+                strategy: 'athleisure'
             });
             console.log('outfit_op1:', outfit_op1);
             outfits.push(outfit_op1);
