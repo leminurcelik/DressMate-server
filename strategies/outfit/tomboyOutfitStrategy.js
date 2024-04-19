@@ -10,6 +10,7 @@ class TomboyOutfitStrategy extends baseOutfitStrategy {
 
         // filter the clothing items by the weather and style
         const filteredItems = await filterItems(userId, options);
+        console.log('filtere items in TOMBOY:', filteredItems);
 
         // create the outfit
         let outfit;
@@ -50,6 +51,7 @@ async function filterItems(userId, options){
     else {
         dayWeather = "Cold";
     }
+    console.log('dayWeather:', dayWeather);
 
     let styleOptions;
     switch (options.style) {
@@ -66,119 +68,23 @@ async function filterItems(userId, options){
         default:
             styleOptions = [];
     }
+    console.log('styleOptions:', styleOptions);
+    console.log('clothingItems:', clothingItems);
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
-        if (!item.wearableWeather.includes(dayWeather) || (item.category !== 'Shoes' && item.details && item.details.fit_type != 'Oversize') || item.isClean === false || !styleOptions.includes(item.style)) {
+        if (!item.wearableWeather.includes(dayWeather) || 
+        (item.category !== 'Shoes' && item.details && item.details.fit_type != 'Oversize') || 
+        item.isClean === false  || 
+        !styleOptions.includes(item.style)) {
             return false;
         }
-
+        return true;
     });
+    console.log('filteredItems:', filteredItems);
     return filteredItems;
 }
 
 
-const getRandomColors = (items, count) => {
-    const allColors = items.map(item => item.color);
-
-    const colors = [];
-    while (colors.length < count) {
-        const color = allColors[Math.floor(Math.random() * allColors.length)];
-            colors.push(color);
-    }
-    return colors;
-}
-
-function createOutfitOld(clothingItems, colors, temp, condition) {
-    const one_piece = getRandomItemByColorAndType(clothingItems, colors, 'One-piece');
-    const top = getRandomItemByColorAndType(clothingItems, colors, 'Top');
-    const bottom = getRandomItemByColorAndType(clothingItems, colors, 'Bottom');
-    const shoe = getRandomItemByColorAndType(clothingItems, colors, 'Shoes');
-    const outerwear = getRandomItemByColorAndType(clothingItems, colors, 'Outerwear');
-
-    let outfits = [];
-
-    if (one_piece && shoe) {
-        //console.log('one_piece and shoe in tomboy:');
-        let outfit_op1_items = [
-            { id: one_piece._id, imageUrl: one_piece.imageUrl, category: one_piece.category},
-            { id: shoe._id, imageUrl: shoe.imageUrl, category: shoe.category},
-        ];
-        if (outerwear) {
-            outfit_op1_items.push({ id: outerwear._id, imageUrl: outerwear.imageUrl , category: outerwear.category});
-        }
-
-        let outfit_op1 = new Outfit({
-            name: `${one_piece.name} outfit`,
-            items: outfit_op1_items,
-            weatherTemperature: temp,
-            weatherCondition: condition,
-            strategy: 'tomboy'
-        });
-
-        outfits.push(outfit_op1);
-    }
-
-    if (top && bottom && shoe) {
-        //console.log('top, bottom and shoe in tomboy:');
-        let outfit_op2_items = [
-            { id: top._id, imageUrl: top.imageUrl, category: top.category},
-            { id: bottom._id, imageUrl: bottom.imageUrl, category: bottom.category},
-            { id: shoe._id, imageUrl: shoe.imageUrl, category: shoe.category},
-        ];
-        if (outerwear) {
-            outfit_op2_items.push({ id: outerwear._id, imageUrl: outerwear.imageUrl, category: outerwear.category});
-        }
-
-        let outfit_op2 = new Outfit({
-            name: `${top.name} - ${bottom.name} outfit`,
-            items: outfit_op2_items,
-            weatherTemperature: temp,
-            weatherCondition: condition,
-            strategy: 'tomboy'
-        });
-
-        outfits.push(outfit_op2);
-    }
-
-    if (outfits.length === 0) {
-        throw new Error('Could not create any outfits');
-    }
-
-    //randomly choosing one of the outfits
-    let randomIndex = Math.floor(Math.random() * outfits.length);
-    return outfits[randomIndex];
-}
-
-
- function getRandomItemByColorAndTypeOld(clothingItems, colors, type) {
-    let items = clothingItems.filter(item => {
-        return colors.flat().includes(item.color[0]) && item.category === type;
-    });
-
-    // Get favorite items
-    const favoriteItems = items.filter(item => item.isFavorite);
-    console.log('favoriteItems:', favoriteItems);
-
-    // Duplicate favorite items to increase their chance of being selected
-    items = items.map(item => favoriteItems.includes(item) ? [item, item] : [item]).flat();
-    if (items.length === 0) {
-        return undefined;
-    }
-
-    const randomIndex = Math.floor(Math.random() * items.length);
-    return items[randomIndex];
-}
-
-function getItemsByColorAndType(clothingItems, colors, type) {
-    const items = clothingItems.filter(item => {
-        return item.color.some(color => colors.flat().includes(color)) && item.category === type;
-    });
-
-    return items;
-}
-
-
-//DENEME DENEME
 
 function createOutfit(clothingItems, temp, condition) {
     console.log('CAME TO CREATE OUTFIT IN tomboy STRATEGY');
@@ -305,7 +211,5 @@ function getRandomItemByColorAndType(clothingItems, colors, type) {
     const randomIndex = Math.floor(Math.random() * items.length);
     return items[randomIndex];
 }
-
-//DENEME DENEME ENDS
 
 module.exports = TomboyOutfitStrategy;
