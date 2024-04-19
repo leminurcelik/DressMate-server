@@ -46,7 +46,7 @@ router.get('/suggestClothingItemDetails', verifyToken, async (req, res) => {
         const objects = await suggestClothingItemDetails(userId, imageUrl);
         return res.status(200).json({ objects });
     } catch (error) {
-        console.error('Error suggesting clothing item details:', error.message);
+        //console.error('Error suggesting clothing item details:', error.message);
         return res.status(500).json({ error: 'Failed to suggest clothing item details' });
     }
 });

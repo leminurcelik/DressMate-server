@@ -88,7 +88,7 @@ const suggestClothingItemDetails = async (userId, imageUrl) => {
 
         return { name: name.trim(), category: detectedCategory, subcategory: detectedSubcategory, color: color};
     } catch (error) {
-        console.error('Error:', error);
+        //console.error('Error:', error);
         return null;
     }
 }
@@ -118,16 +118,19 @@ function getColorBucket(hsl) {
     const h = hsl[0] * 360;  // Convert to degrees
     const s = hsl[1];
     const l = hsl[2];
+    console.log(h, s, l);
 
     if (l < 0.16) return 'Black';
     if (l > 0.9) return 'White';
+    if (s < 0.25) return 'Gray';
 
-    if (h < 30) return 'Red';
-    if (h < 90) return 'Yellow';
-    if (h < 150) return 'Green';
-    if (h < 240) return 'Blue';
-    if (h < 330) return 'Pink';
-    return 'Red';  // For h >= 330
+    if (h < 15 || h >= 345) return 'Red';
+    if (h < 45) return 'Orange';
+    if (h < 75) return 'Yellow';
+    if (h < 165) return 'Green';
+    if (h < 255) return 'Blue';
+    if (h < 285) return 'Purple';
+    if (h < 345) return 'Pink';
+    return 'Red';  // For h >= 345
 }
-
 module.exports = { suggestClothingItemDetails, rgbToHsl, getColorBucket};
