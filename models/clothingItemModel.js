@@ -10,10 +10,6 @@ const clothingItemSchema = new mongoose.Schema({
         required: true,
         ref: 'User', // The model to use
     },
-    name: {
-        type: String,
-        required: true,
-    },
     style: {
         type: String,
         required: true,

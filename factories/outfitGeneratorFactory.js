@@ -26,7 +26,7 @@ class OutfitGeneratorFactory {
 
         // Check for Preppy strategy
         console.log('checking for preppy strategy')
-        if (clothingItems.some(item => ['Pants', 'Blouse', 'Jacket', 'Coat'].includes(item.subcategory) && ['Formal', 'Evening'].includes(item.style))) {   
+        if (clothingItems.some(item => ['Pants', 'Blouse', 'Jacket', 'Coat','Shirt'].includes(item.subcategory) && ['Formal', 'Evening'].includes(item.style))) {   
             console.log('preppy strategy secildi')
             console.log('preppy strategy secildi')
             strategies.push(new PreppyOutfitStrategy(userId, options));
@@ -50,8 +50,8 @@ class OutfitGeneratorFactory {
         }
 
          // Get the strategies that the user has saved
-        const savedStrategies = await Outfit.find({ isSaved: true }).distinct('strategy');
-        console.log('saved strategies:', savedStrategies);
+         const savedStrategies = await Outfit.find({ isSaved: true, userId: userId }).distinct('strategy');
+         console.log('saved strategies:', savedStrategies);
 
         // Intersect the available strategies with the saved strategies
         const strategyNameMapping = {
