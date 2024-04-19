@@ -214,13 +214,11 @@ async function filterItems(userId, options) {
     }
     //console.log('dayWeather:', dayWeather);
 
-    const desiredColors = ['Red', 'Blue', 'White', 'Yellow', 'Green'];
     // filter 
     const filteredItems = clothingItems.filter(item => {
         return item.wearableWeather.includes(dayWeather) 
-            && (item.style === 'Casual' || item.style === 'Formal' || item.style === 'Evening')
+            && styleOptions.includes(item.style)
             && (item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')
-            && item.color.some(color => desiredColors.includes(color))
             && item.isClean !== false;
     });
 

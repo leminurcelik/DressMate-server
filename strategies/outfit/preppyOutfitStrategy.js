@@ -69,7 +69,9 @@ async function filterItems(userId, options){
     }
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
-        return item.wearableWeather.includes(dayWeather) && (item.style === 'Casual' || item.style === 'Formal') && item.isClean;
+        return item.wearableWeather.includes(dayWeather) 
+            && styleOptions.includes(item.style)
+            && item.isClean;
     });
     return filteredItems;
 }

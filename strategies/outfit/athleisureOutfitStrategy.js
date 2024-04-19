@@ -204,7 +204,7 @@ async function filterItems(userId, options) {
                     case 'Shoes':
                         return item.style === 'Casual' || item.style === 'Sportswear';
                     case 'Outerwear':
-                        return item.style === 'Formal' || item.style === 'Casual';
+                        return item.style === 'Casual';
                     default:
                         return false;
                 }
