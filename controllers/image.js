@@ -131,7 +131,7 @@ function getColorBucket(hsl) {
     if (l > 0.9) return 'White';
     if (s < 0.25) return 'Gray';
 
-    if (h < 14) return 'Red';
+    if (h < 10.5) return 'Red';
     if (h < 45) return 'Orange';
     if (h < 75) return 'Yellow';
     if (h < 165) return 'Green';
