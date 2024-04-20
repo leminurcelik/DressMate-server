@@ -57,6 +57,44 @@ const addClothingItems = async (userId, clothingItemsData) => {
     }
 }
 
+// update clothing item
+const updateClothingItem = async (userId, clothingItemId, clothingItemData) => {
+    try {
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        // Find the cloth by clothing item ID
+        const cloth = await ClothingItem.findById(clothingItemId);
+        if (!cloth) {
+            throw new Error('Clothing item not found');
+        }
+
+        // Update the clothing item properties
+        for (let key in clothingItemData) {
+            if (cloth[key] !== undefined) {
+                cloth[key] = clothingItemData[key];
+            } else {
+                throw new Error(`Invalid property: ${key}`);
+            }
+        }
+
+        // Save the updated clothing item document
+        try {
+            const result = await cloth.save();
+            return result;
+        } catch (error) {
+            console.error('Validation error:', error);
+            throw error;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}        
+
+
 // delete clothing item
 const deleteClothingItem = async (userId, clothingItemId) => {
     try {
@@ -281,4 +319,4 @@ function mapToCategory(labels) {
 function mapToSubcategory(labels) {
     // Implement your mapping logic here
 }
-module.exports = { addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems, suggestClothingItemDetails, getItemsInLaundryBasket, getItemsInFavorites, getItemsClean};
+module.exports = { addClothingItem, updateClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems, suggestClothingItemDetails, getItemsInLaundryBasket, getItemsInFavorites, getItemsClean};

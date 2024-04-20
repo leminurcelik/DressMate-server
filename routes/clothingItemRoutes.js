@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {addClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems, getItemsInFavorites, getItemsInLaundryBasket}= require('../controllers/clothingItem.js');
+const {addClothingItem, updateClothingItem, getItemsByCategory, getItemsBySubcategory, getItemsById, getAllClothingItems, favoriteStatus, laundryStatus, deleteClothingItem, addClothingItems, getItemsInFavorites, getItemsInLaundryBasket}= require('../controllers/clothingItem.js');
 const {User} = require("../models/userModel.js");
 
 const { verify } = require('jsonwebtoken');
@@ -34,6 +34,18 @@ router.post('/addClothingItems',verifyToken, async (req, res) => {
     }
 });
 
+router.put('/updateClothingItem',verifyToken, async (req, res) => {
+    const { itemId } = req.query;
+    console.log('req.body:', req.body);
+    try {
+        console.log('req.userId:', req.userId);  
+        const result = await updateClothingItem(req.userId, itemId, req.body);
+        res.status(200).json({ message: 'Clothing item updated successfully', data: result });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(400).json({ message: error.message});
+    }
+});
 
 router.delete('/deleteClothingItem',verifyToken, async (req, res) => {
     const { itemId } = req.query;
