@@ -15,9 +15,13 @@ const client = new vision.ImageAnnotatorClient({
 
 const suggestClothingItemDetails = async (userId, imageUrl) => {
     try {
+        console.log('came to suggesst:', userId);
         // Download the image
         const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+        console.log('response:', response.status);
+        console.log('response:', response.data);
         const imageBuffer = Buffer.from(response.data, 'binary');
+        console.log('imageBuffer:', imageBuffer);
 
         const request = {
             image: {content: imageBuffer},
@@ -28,6 +32,7 @@ const suggestClothingItemDetails = async (userId, imageUrl) => {
         };
 
         const [result] = await client.annotateImage(request);
+       
 
         // Extract object localization
         const objects = result.localizedObjectAnnotations;
@@ -118,19 +123,21 @@ function getColorBucket(hsl) {
     const h = hsl[0] * 360;  // Convert to degrees
     const s = hsl[1];
     const l = hsl[2];
-    console.log(h, s, l);
+    console.log('h:', h);
+    console.log('s:', s);
+    console.log('l:', l);
 
     if (l < 0.16) return 'Black';
     if (l > 0.9) return 'White';
     if (s < 0.25) return 'Gray';
 
-    if (h < 15 || h >= 345) return 'Red';
+    if (h < 10.5) return 'Red';
     if (h < 45) return 'Orange';
     if (h < 75) return 'Yellow';
     if (h < 165) return 'Green';
     if (h < 255) return 'Blue';
     if (h < 285) return 'Purple';
     if (h < 345) return 'Pink';
-    return 'Red';  // For h >= 345
+    if (h >= 345) return 'Red';
 }
 module.exports = { suggestClothingItemDetails, rgbToHsl, getColorBucket};
