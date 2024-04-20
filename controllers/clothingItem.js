@@ -101,31 +101,26 @@ const deleteClothingItem = async (userId, clothingItemId) => {
         // Find the user by ID
         const user = await User.findById(userId);
         if (!user) {
-            return 'User not found';
+            throw new Error('User not found');
         }
 
         // Find the clothing item by ID
         const cloth = await ClothingItem.findById(clothingItemId);
         if (!cloth) {
-            return 'Clothing item not found';
+            throw new Error('Clothing item not found');
         }
-        console.log(String(cloth.user));
-        console.log(String(cloth.userId));
 
         // Check if the clothing item belongs to the user
         if (String(cloth.userId) !== userId) {
-            return 'Clothing item does not belong to the user';
+            throw new Error('Clothing item does not belong to the user');
         }
 
         // Find the clothing item by ID and delete it
         const result = await ClothingItem.deleteOne({ _id: clothingItemId });
-        if (result.deletedCount === 0) {
-            return 'Clothing item not found';
-        }
         return result;
     } catch (error) {
         console.error('Error:', error);
-        return null;
+        throw error;
     }
 }
 
