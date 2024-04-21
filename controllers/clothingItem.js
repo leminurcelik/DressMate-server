@@ -23,7 +23,7 @@ const addClothingItem = async (userId, clothingItemData) => {
         const result = await newItem.save();
         return result;
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error.message);
         return null;
     }
 }
