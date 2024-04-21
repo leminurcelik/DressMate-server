@@ -14,10 +14,11 @@ router.post('/addClothingItem',verifyToken, async (req, res) => {
     try {
         //console.log('req.userId:', req.userId);  
         const result = await addClothingItem(req.userId, req.body);
+        console.log('result:', result);
         res.status(200).json(result);
     } catch (error) {
         console.log('error for adding:', error);
-        console.error('Error:', error);
+        console.error('Error:', error.message);
         res.status(500).json({ message: error.message});
     }
 });
