@@ -56,7 +56,7 @@ const signup = async (req, res) => {
 
         const token = jwt.sign({ email: newUser.email, id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "1h" }); // Use environment variable
 
-        res.status(201).json({ result: newUser, token });
+        res.status(201).json({ message: "Account created successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
