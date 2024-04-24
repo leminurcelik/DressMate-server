@@ -1,6 +1,7 @@
 /*
 get by category (all items) pagination
 */
+const mongoose = require('mongoose');
 const ClothingItem = require("../models/clothingItemModel");
 const User = require("../models/userModel");
 // add clothing item
@@ -23,8 +24,12 @@ const addClothingItem = async (userId, clothingItemData) => {
         const result = await newItem.save();
         return result;
     } catch (error) {
-        console.error('Error:', error);
-        return null;
+        console.error('Error:', error.message);
+        // If the error is a Mongoose validation error, throw the error
+        if (error instanceof mongoose.Error.ValidationError) {
+            throw error;
+        }
+        throw new Error('Internal server error');
     }
 }
 

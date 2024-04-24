@@ -15,21 +15,27 @@ const clothingItemSchema = new mongoose.Schema({
         required: true,
         enum: clothingItemOptions.styleOptions,
     },
-    color: [{
-        type: String,
+    color: {
+        type: [{
+            type: String,
+            enum: clothingItemOptions.colorOptions,
+        }],
         required: true,
-        enum: clothingItemOptions.colorOptions,
-    }],
+        validate: [arrayLimit, '{PATH} needs to have at least 1 color.']
+    },
     pattern: {
         type: String,
         required: true,
         enum: clothingItemOptions.patternOptions,
     },
-    wearableWeather: [{
-        type: String,
+    wearableWeather: {
+        type: [{
+            type: String,
+            enum: clothingItemOptions.wearableWeatherOptions,
+        }],
         required: true,
-        enum: clothingItemOptions.wearableWeatherOptions,
-    }],
+        validate: [arrayLimit, '{PATH} needs to have at least 1 weather condition.']
+    },
     category: { // top, bottom, shoes, one-piece, accessory, outerwear
         type: String,
         required: true,
@@ -77,6 +83,11 @@ const clothingItemSchema = new mongoose.Schema({
         required: false,    
     },
 });
+
+function arrayLimit(val) {
+    console.log(val,"arrayLimit");
+    return val.length > 0;
+  }
 
 const ClothingItem = mongoose.model("ClothingItem", clothingItemSchema);
 
