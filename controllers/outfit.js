@@ -13,15 +13,14 @@ const getItemsByCategory = async (category, page, limit) => {
 }  
 */
 
-
-const OutfitGeneratorFactory = require('../factories/outfitGeneratorFactory');
 const User = require("../models/userModel");
 const Outfit = require("../models/outfitModel");
+const OutfitGenerator = require('../generators/outfitGenerator');
 
 const generateOutfit = async (userId, options) => {
     try {
-        const outfitGenerator = await OutfitGeneratorFactory.createOutfitGenerator(userId, options);
-        const result = await outfitGenerator.generateOutfit(userId, options);
+        const outfitGenerator = new OutfitGenerator(userId, options);
+        const result = await outfitGenerator.generateOutfit();
         console.log('result:', result);
         return result;
     } catch (error) {

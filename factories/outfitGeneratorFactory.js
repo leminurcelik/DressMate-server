@@ -6,7 +6,7 @@ const { RomanticOutfitStrategy, AthleisureOutfitStrategy, PreppyOutfitStrategy, 
 
 
 class OutfitGeneratorFactory {
-    static async createOutfitGenerator(userId, options) {
+    static async createStrategies(userId, options) {
         // Determine the strategies based on the clothing items
         let strategies = [];
 
@@ -90,7 +90,8 @@ class OutfitGeneratorFactory {
         console.log('selected strategies:', selectedStrategies);
 
         // Create a new OutfitGenerator with the chosen strategies
-        return new OutfitGenerator(selectedStrategies);
+        //return new OutfitGenerator(selectedStrategies);
+        return selectedStrategies;
     }
 }
 
