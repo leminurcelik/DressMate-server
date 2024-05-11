@@ -2,6 +2,7 @@ const baseOutfitStrategy = require('./baseOutfitStrategy');
 const ClothingItem = require('../../controllers/clothingItem');
 const Outfit = require("../../models/outfitModel");
 const weather = require('../../controllers/weather');
+const { weatherOptions } = require('../../config/clothingItemOptions');
 
 class TomboyOutfitStrategy extends baseOutfitStrategy {
     async generateOutfit(userId, options) {
@@ -33,9 +34,11 @@ class TomboyOutfitStrategy extends baseOutfitStrategy {
     }
 }
 
-async function filterItems(userId, options){
+
+async function filterItems(userId, options) {
     // get the weather data
     const weatherData = await weather.getTemperature(options.location, options.date, options.time);
+    console.log('weatherData:', weatherData);
 
     // get the clothing items of the user
     const clothingItems = await ClothingItem.getAllClothingItems(userId);
@@ -45,42 +48,75 @@ async function filterItems(userId, options){
 
     // get the weather condition
     let dayWeather;
-    if (temp >= 15 ) {
+    console.log('temp:', temp);
+    if (temp >= 25 ) {
         dayWeather = "Hot";
+    }
+    else if (temp >= 15) {
+        dayWeather = "Warm";
+    }
+    else if (temp >= 5) {
+        dayWeather = "Cool";
     }
     else {
         dayWeather = "Cold";
     }
-    console.log('dayWeather:', dayWeather);
 
     let styleOptions;
     switch (options.style) {
-        case 'Evening':
-            styleOptions = ['Formal', 'Evening'];
-            break;
-        case 'Sportswear':
-        case 'Casual':
-            styleOptions = ['Casual', 'Sportswear'];
-            break;
-        case 'Formal':
-            styleOptions = ['Formal'];
-            break;
-        default:
-            styleOptions = [];
+    case 'Evening':
+        styleOptions = ['Formal', 'Evening'];
+        break;
+    case 'Sportswear':
+    case 'Casual':
+        styleOptions = ['Casual', 'Sportswear'];
+        break;
+    case 'Formal':
+        styleOptions = ['Formal'];
+        break;
+    default:
+        styleOptions = [];
     }
-    console.log('styleOptions:', styleOptions);
-    console.log('clothingItems:', clothingItems);
+
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
-        if (!item.wearableWeather.includes(dayWeather) || 
-        (item.category !== 'Shoes' && item.details && item.details.fit_type != 'Oversize') || 
-        item.isClean === false  || 
-        !styleOptions.includes(item.style)) {
+        // filter out items with certain fabrics when it's raining or snowing
+        if ((weatherData.includes('rain') || weatherData.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
             return false;
         }
-        return true;
+
+        // filter out items that are not boots when it's snowing
+        if (weatherData.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
+            return false;
+        }
+
+        // filter out items that are not Oversize
+        if (item.category !== 'Shoes' && item.details && item.details.fit_type !== 'Oversize') {
+            return false;
+        }
+
+        switch (item.category) {
+            case 'One-piece':
+            case 'Top':
+            case 'Bottom':
+                // items can be labeled with the same weather or one level hotter
+                const itemWeatherIndex = weatherOptions.indexOf(item.wearableWeather);
+                const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
+                if (!(itemWeatherIndex >= dayWeatherIndex && itemWeatherIndex <= dayWeatherIndex + 1)) {
+                    return false;
+                }
+                // fall through to check style
+            case 'Outerwear':
+                // Outerwear weather should be exactly same as dayWeather
+                if (item.wearableWeather !== dayWeather) {
+                    return false;
+                }
+                // fall through to check style
+            default:
+                return styleOptions.includes(item.style) && item.isClean;
+        }
     });
-    console.log('filteredItems:', filteredItems);
+
     return filteredItems;
 }
 

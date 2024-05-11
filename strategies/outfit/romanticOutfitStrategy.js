@@ -2,6 +2,7 @@ const baseOutfitStrategy = require('./baseOutfitStrategy');
 const ClothingItem = require('../../controllers/clothingItem');
 const Outfit = require("../../models/outfitModel");
 const weather = require('../../controllers/weather');
+const { weatherOptions } = require('../../config/clothingItemOptions');
 
 //itemler fiilterdan gelecek
 // bir etek üst ve bir onepiece olarak kombin yapılacak (favori bi itemi varsa seçeneklerden o seçilecek)
@@ -175,36 +176,42 @@ function getRandomItemByColorAndType(clothingItems, colors, type) {
 
 
 async function filterItems(userId, options) {
-    //console.log('came to romanticFilter');
-    //console.log('options:', options);
-
     // get the weather data
     const weatherData = await weather.getTemperature(options.location, options.date, options.time);
-
+    console.log('weatherData:', weatherData);
 
     // get the clothing items of the user
     const clothingItems = await ClothingItem.getAllClothingItems(userId);
-
 
     // get the temperature
     const temp = weatherData.temperature;
 
     // get the weather condition
     let dayWeather;
-    if (temp >= 15 ) {
+    console.log('temp:', temp);
+    if (temp >= 25 ) {
         dayWeather = "Hot";
+    }
+    else if (temp >= 15) {
+        dayWeather = "Warm";
+    }
+    else if (temp >= 5) {
+        dayWeather = "Cool";
     }
     else {
         dayWeather = "Cold";
     }
+
     let styleOptions;
     switch (options.style) {
     case 'Evening':
         styleOptions = ['Formal', 'Evening'];
         break;
     case 'Sportswear':
-    case 'Casual':
         styleOptions = ['Casual', 'Sportswear'];
+        break;
+    case 'Casual':
+        styleOptions = ['Casual'];
         break;
     case 'Formal':
         styleOptions = ['Formal'];
@@ -212,22 +219,54 @@ async function filterItems(userId, options) {
     default:
         styleOptions = [];
     }
-    //console.log('dayWeather:', dayWeather);
 
-    // filter 
+     
+
+    // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
+
         if (item.category === 'Shoes' && options.style === 'Evening') {
-            return item.style === 'Evening' && item.isClean !== false;
+            return item.style === 'Evening';
         }
         if (item.category === 'Shoes' && options.style === 'Formal') {
-            return item.style === 'Evening' || item.style=='Formal' && item.isClean !== false;
+            return item.style === 'Evening' || item.style=='Formal';
         }
-        
 
-        return item.wearableWeather.includes(dayWeather) 
-            && styleOptions.includes(item.style)
-            && (item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')
-            && item.isClean !== false;
+        // filter out items with certain fabrics when it's raining or snowing
+        if ((weatherData.includes('rain') || weatherData.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
+            return false;
+        }
+
+        // filter out items that are not boots when it's snowing
+        if (weatherData.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
+            return false;
+        }
+
+        // check if the item's category is 'Top', 'Shoes', 'One-piece', 'Outerwear', or if the item's subcategory is 'Skirt'
+        if (!(item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')) {
+            return false;
+        }
+
+        switch (item.category) {
+            case 'One-piece':
+            case 'Top':
+            case 'Bottom':
+                // items can be labeled with the same weather or one level hotter
+                const itemWeatherIndex = weatherOptions.indexOf(item.wearableWeather);
+                const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
+                if (!(itemWeatherIndex >= dayWeatherIndex && itemWeatherIndex <= dayWeatherIndex + 1)) {
+                    return false;
+                }
+                // fall through to check style
+            case 'Outerwear':
+                // Outerwear weather should be exactly same as dayWeather
+                if (item.wearableWeather !== dayWeather) {
+                    return false;
+                }
+                // fall through to check style
+            default:
+                return styleOptions.includes(item.style) && item.isClean;
+        }
     });
 
     return filteredItems;
