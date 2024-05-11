@@ -264,6 +264,7 @@ const getItemsByCategory = async (category, userId, page, limit) => {
 const getItemsBySubcategory = async (subcategory, userId,page, limit) => {
     try {
         const result = await ClothingItem.find({ subcategory: subcategory, userId: userId }).skip((page - 1) * limit).limit(limit);
+        result.forEach(item => console.log('clothing item details:', item.details));
         return result;
     }   
     catch (error) {
