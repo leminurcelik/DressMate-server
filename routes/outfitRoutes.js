@@ -14,7 +14,7 @@ router.get('/generateOutfit',verifyToken, async (req, res) => {
     }
 });
 
-router.post('/saveOutfitStatus',verifyToken, async (req, res) => {
+router.put('/saveOutfitStatus',verifyToken, async (req, res) => {
     try {
         const result = await saveOutfitStatus(req.userId,req.body._id);
         res.status(200).json(result);
