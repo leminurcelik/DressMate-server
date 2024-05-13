@@ -34,15 +34,16 @@ class AthleisureOutfitStrategy extends baseOutfitStrategy {
 }
 
 function createOutfit(clothingItems, temp, condition) {
-    console.log('CAME TO CREATE OUTFIT IN athleisure STRATEGY');
+    //console.log('CAME TO CREATE OUTFIT IN athleisure STRATEGY');
     let outfits = [];
     let colors = [];
 
     const one_piece = getRandomItemByType(clothingItems, 'One-piece');
+    //console.log('one_piece in athleisure:', one_piece);
     if (one_piece) {
-        console.log('one_piece found');
+        //console.log('one_piece found');
         colors.push(...one_piece.color);
-        console.log(colors);
+        //console.log(colors);
         const shoe = getRandomItemByColorAndType(clothingItems, colors, 'Shoes');
         if (shoe) {
             shoe.color.forEach(color => {
@@ -50,9 +51,9 @@ function createOutfit(clothingItems, temp, condition) {
                     colors.push(color);
                 }
             });
-            console.log('shoe found');
-            console.log(shoe.color)
-            console.log(colors);
+            //console.log('shoe found');
+            //console.log(shoe.color)
+            //console.log(colors);
             let outfit_op1_items = [
                 { id: one_piece._id, imageUrl: one_piece.imageUrl, category: one_piece.category },
                 { id: shoe._id, imageUrl: shoe.imageUrl, category: shoe.category},
@@ -69,18 +70,19 @@ function createOutfit(clothingItems, temp, condition) {
                 weatherCondition: condition,
                 strategy: 'athleisure'
             });
-            console.log('outfit_op1:', outfit_op1);
+            //console.log('outfit_op1:', outfit_op1);
             outfits.push(outfit_op1);
         }
     }
 
     colors = [];
     const top = getRandomItemByType(clothingItems, 'Top');
+    //console.log('top in athlesiure:', top)
     if (top) {
         colors.push(...top.color);
-        console.log('top found');
-        console.log(top.color);
-        console.log(colors);
+        //console.log('top found');
+        //console.log(top.color);
+        //console.log(colors);
         const bottom = getRandomItemByColorAndType(clothingItems, colors, 'Bottom');
         if (bottom) {
             bottom.color.forEach(color => {
@@ -88,9 +90,9 @@ function createOutfit(clothingItems, temp, condition) {
                     colors.push(color);
             }
             });
-            console.log('bottom found');
-            console.log(bottom.color);
-            console.log(colors);
+            //console.log('bottom found');
+            //console.log(bottom.color);
+            //console.log(colors);
             const shoe = getRandomItemByColorAndType(clothingItems, colors, 'Shoes');
             if (shoe) {
                 shoe.color.forEach(color => {
@@ -98,9 +100,9 @@ function createOutfit(clothingItems, temp, condition) {
                         colors.push(color);
                     }
                 });
-                console.log('shoe found');
-                console.log('shoe color: ',shoe.color);
-                console.log(colors);
+                //console.log('shoe found');
+                //console.log('shoe color: ',shoe.color);
+                //console.log(colors);
                 let outfit_op2_items = [
                     { id: top._id, imageUrl: top.imageUrl, category: top.category},
                     { id: bottom._id, imageUrl: bottom.imageUrl , category: bottom.category},
@@ -118,7 +120,7 @@ function createOutfit(clothingItems, temp, condition) {
                     weatherCondition: condition,
                     strategy: 'athleisure'
                 });
-                console.log('outfit_op2:', outfit_op2);
+                //console.log('outfit_op2:', outfit_op2);
                 outfits.push(outfit_op2);
             }
         }
@@ -163,7 +165,7 @@ function getRandomItemByColorAndType(clothingItems, colors, type) {
 async function filterItems(userId, options) {
     // get the weather data
     const weatherData = await weather.getTemperature(options.location, options.date, options.time);
-    console.log('weatherData:', weatherData);
+    //console.log('weatherData:', weatherData);
 
     // get the clothing items of the user
     const clothingItems = await ClothingItem.getAllClothingItems(userId);
@@ -173,7 +175,7 @@ async function filterItems(userId, options) {
 
     // get the weather condition
     let dayWeather;
-    console.log('temp:', temp);
+    //console.log('temp:', temp);
     if (temp >= 25 ) {
         dayWeather = "Hot";
     }
@@ -186,6 +188,7 @@ async function filterItems(userId, options) {
     else {
         dayWeather = "Cold";
     }
+    //console.log('dayWeather:', dayWeather); 
 
     // if the weather is 'Hot or 'Warm', change the category of 'Sweater' and 'Shirt' to 'Outerwear' in the copied array
     if (dayWeather === 'Hot' || dayWeather === 'Warm') {
@@ -198,7 +201,34 @@ async function filterItems(userId, options) {
 
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
-        if ( item.isClean === false) {
+
+        // items can be labeled with the same weather or one level hotter
+        const weatherOptions = ['Cold', 'Cool', 'Warm', 'Hot'];
+        const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
+        const hotterWeather = weatherOptions[dayWeatherIndex + 1]; // get the one level hotter weather
+
+        // For outerwear, it should directly include dayWeather
+        if (item.category === 'Outerwear' && !item.wearableWeather.includes(dayWeather)) {
+            return false;
+        }
+
+        // For other categories, it should include items that are labeled with the same weather or one level hotter
+        if (item.category !== 'Outerwear' && !(item.wearableWeather.includes(dayWeather) || (hotterWeather && item.wearableWeather.includes(hotterWeather)))) {
+            return false;
+        }
+
+        // check style and cleanliness for all items
+        if (!styleOptions.includes(item.style) || !item.isClean) {
+            return false;
+        }
+
+        // filter out items with certain fabrics when it's raining or snowing
+        if ((weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
+            return false;
+        }
+
+        // filter out items that are not boots when it's snowing
+        if (weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
             return false;
         }
 
@@ -210,29 +240,6 @@ async function filterItems(userId, options) {
         // filter out shirts when the weather is cold or cool
         if ((dayWeather === 'Cold' || 'Cool') && item.subCategory === 'Shirt') {
             return false;
-        }
-
-        // filter out items with certain fabrics when it's raining or snowing
-        if ((weatherData.includes('rain') || weatherData.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
-            return false;
-        }
-
-        // filter out items that are not boots when it's snowing
-        if (weatherData.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
-            return false;
-        }
-
-        
-        switch (item.category) {
-            case 'One-piece':
-            case 'Top':
-            case 'Bottom':
-                // items can be labeled with the same weather or one level hotter
-                const itemWeatherIndex = weatherOptions.indexOf(item.wearableWeather);
-                const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
-                if (!(itemWeatherIndex >= dayWeatherIndex && itemWeatherIndex <= dayWeatherIndex + 1)) {
-                    return false;
-                }
         }
 
         switch (item.category) {
@@ -250,9 +257,11 @@ async function filterItems(userId, options) {
                 return false;
         }
 
+        return true;
+
 
     });
-
+    console.log('filteredItems in athleisure:', filteredItems);
     return filteredItems;
 }
 module.exports = AthleisureOutfitStrategy;

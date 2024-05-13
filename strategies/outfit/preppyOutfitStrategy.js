@@ -34,7 +34,6 @@ class PreppyOutfitStrategy extends baseOutfitStrategy {
 }
 
 
-
 async function filterItems(userId, options){
     console.log('preppyFilterStrategy geldi');
     // get the weather data
@@ -43,6 +42,7 @@ async function filterItems(userId, options){
 
     // get the clothing items of the user
     const clothingItems = await ClothingItem.getAllClothingItems(userId);
+    //console.log('clothingItems:', clothingItems);
 
     // get the temperature
     const temp = weatherData.temperature;
@@ -61,15 +61,15 @@ async function filterItems(userId, options){
     else {
         dayWeather = "Cold";
     }
+    console.log('dayWeather:', dayWeather); 
 
     let styleOptions;
     switch (options.style) {
     case 'Evening':
         styleOptions = ['Formal', 'Evening'];
         break;
-    case 'Sportswear':
     case 'Casual':
-        styleOptions = ['Casual', 'Sportswear'];
+        styleOptions = ['Casual', 'Formal'];
         break;
     case 'Formal':
         styleOptions = ['Formal'];
@@ -80,39 +80,45 @@ async function filterItems(userId, options){
 
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
+        // items can be labeled with the same weather or one level hotter
+        const weatherOptions = ['Cold', 'Cool', 'Warm', 'Hot'];
+        const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
+        const hotterWeather = weatherOptions[dayWeatherIndex + 1]; // get the one level hotter weather
+
+        // For outerwear, it should directly include dayWeather
+        if (item.category === 'Outerwear' && !item.wearableWeather.includes(dayWeather)) {
+            return false;
+        }
+
+        if (item.category === 'Shoes' && item.style == 'Sportswear') {
+            return false;
+        }   
+
+        // For other categories, it should include items that are labeled with the same weather or one level hotter
+        if (item.category !== 'Outerwear' && !(item.wearableWeather.includes(dayWeather) || (hotterWeather && item.wearableWeather.includes(hotterWeather)))) {
+            return false;
+        }
+
+        // check style and cleanliness for all items
+        if (!styleOptions.includes(item.style) || !item.isClean) {
+            return false;
+        }
+
         // filter out items with certain fabrics when it's raining or snowing
-        if ((weatherData.includes('rain') || weatherData.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
+        if ((weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
             return false;
         }
 
         // filter out items that are not boots when it's snowing
-        if (weatherData.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
+        if (weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
             return false;
         }
 
-        switch (item.category) {
-            case 'One-piece':
-            case 'Top':
-            case 'Bottom':
-                // items can be labeled with the same weather or one level hotter
-                const itemWeatherIndex = weatherOptions.indexOf(item.wearableWeather);
-                const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
-                if (!(itemWeatherIndex >= dayWeatherIndex && itemWeatherIndex <= dayWeatherIndex + 1)) {
-                    return false;
-                }
-                // fall through to check style
-            case 'Outerwear':
-                // Outerwear weather should be exactly same as dayWeather
-                if (item.wearableWeather !== dayWeather) {
-                    return false;
-                }
-                // fall through to check style
-            default:
-                return styleOptions.includes(item.style) && item.isClean;
-        }
+        return true;
     });
 
-    return filteredItems;
+    console.log('filteredItems in preppy:', filteredItems);
+    return filteredItems;  
 }
 
 

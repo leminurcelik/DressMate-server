@@ -176,6 +176,7 @@ function getRandomItemByColorAndType(clothingItems, colors, type) {
 
 
 async function filterItems(userId, options) {
+    console.log('CAME TO FILTER ITEMS IN ROMANTIC STRATEGY');
     // get the weather data
     const weatherData = await weather.getTemperature(options.location, options.date, options.time);
     console.log('weatherData:', weatherData);
@@ -201,6 +202,7 @@ async function filterItems(userId, options) {
     else {
         dayWeather = "Cold";
     }
+    console.log('dayWeather:', dayWeather); 
 
     let styleOptions;
     switch (options.style) {
@@ -225,20 +227,39 @@ async function filterItems(userId, options) {
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
 
-        if (item.category === 'Shoes' && options.style === 'Evening') {
+       /*  if (item.category === 'Shoes' && options.style === 'Evening') {
             return item.style === 'Evening';
         }
         if (item.category === 'Shoes' && options.style === 'Formal') {
             return item.style === 'Evening' || item.style=='Formal';
+        } */
+
+        const weatherOptions = ['Cold', 'Cool', 'Warm', 'Hot'];
+        const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
+        const hotterWeather = weatherOptions[dayWeatherIndex + 1]; // get the one level hotter weather
+        
+        // For outerwear, it should directly include dayWeather
+        if (item.category === 'Outerwear' && !item.wearableWeather.includes(dayWeather)) {
+            return false;
+        }
+
+        // For other categories, it should include items that are labeled with the same weather or one level hotter
+        if (item.category !== 'Outerwear' && !(item.wearableWeather.includes(dayWeather) || (hotterWeather && item.wearableWeather.includes(hotterWeather)))) {
+            return false;
+        }
+
+        // check style and cleanliness for all items
+        if (!styleOptions.includes(item.style) || !item.isClean) {
+            return false;
         }
 
         // filter out items with certain fabrics when it's raining or snowing
-        if ((weatherData.includes('rain') || weatherData.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
+        if ((weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
             return false;
         }
 
         // filter out items that are not boots when it's snowing
-        if (weatherData.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
+        if (weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
             return false;
         }
 
@@ -247,28 +268,11 @@ async function filterItems(userId, options) {
             return false;
         }
 
-        switch (item.category) {
-            case 'One-piece':
-            case 'Top':
-            case 'Bottom':
-                // items can be labeled with the same weather or one level hotter
-                const itemWeatherIndex = weatherOptions.indexOf(item.wearableWeather);
-                const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
-                if (!(itemWeatherIndex >= dayWeatherIndex && itemWeatherIndex <= dayWeatherIndex + 1)) {
-                    return false;
-                }
-                // fall through to check style
-            case 'Outerwear':
-                // Outerwear weather should be exactly same as dayWeather
-                if (item.wearableWeather !== dayWeather) {
-                    return false;
-                }
-                // fall through to check style
-            default:
-                return styleOptions.includes(item.style) && item.isClean;
-        }
+        return true;
+    
     });
-
+    
+    //console.log('filteredItems in romantic:', filteredItems);
     return filteredItems;
 }
 module.exports = RomanticOutfitStrategy;
