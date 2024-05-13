@@ -26,7 +26,7 @@ class OutfitGeneratorFactory {
 
         // Check for Preppy strategy
         console.log('checking for preppy strategy')
-        if (clothingItems.some(item => ['Pants', 'Blouse', 'Jacket', 'Coat','Shirt'].includes(item.subcategory) && ['Formal', 'Evening'].includes(item.style))) {   
+        if (clothingItems.some(item => ['Pants', 'Blouse', 'Jacket', 'Coat','Shirt'].includes(item.subcategory) && ['Formal', 'Evening'].includes(item.style) && (options.style != 'Sportswear'))) {   
             console.log('preppy strategy secildi')
             console.log('preppy strategy secildi')
             strategies.push(new PreppyOutfitStrategy(userId, options));
