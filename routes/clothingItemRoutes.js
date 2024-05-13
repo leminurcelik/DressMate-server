@@ -49,6 +49,7 @@ router.put('/updateClothingItem',verifyToken, async (req, res) => {
     }
 });
 
+
 router.delete('/deleteClothingItem',verifyToken, async (req, res) => {
     const { itemId } = req.query;
 

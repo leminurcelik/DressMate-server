@@ -44,7 +44,7 @@ const outfitSchema = new mongoose.Schema({
     strategy: {
         type: String,
         required: true,
-    },
+    }
 });
 
 const Outfit = mongoose.model("Outfit", outfitSchema);

@@ -153,27 +153,48 @@ function getRandomItemByType(clothingItems, type) {
     if (items.length === 0) {
         return undefined;
     }
-    const randomIndex = Math.floor(Math.random() * items.length);
-    return items[randomIndex];
+
+    let favoriteItems = items.filter(item => item.isFavorite);
+    let nonFavoriteItems = items.filter(item => !item.isFavorite);
+
+    let randomIndex;
+    if (favoriteItems.length > 0 && Math.random() < 0.7) {
+        randomIndex = Math.floor(Math.random() * favoriteItems.length);
+        return favoriteItems[randomIndex];
+    } else {
+        randomIndex = Math.floor(Math.random() * nonFavoriteItems.length);
+        return nonFavoriteItems[randomIndex];
+    }
 }
 
 function getRandomItemByColorAndType(clothingItems, colors, type) {
     let items = clothingItems.filter(item => {
-        return item.category === type && item.color.some(color => {
-            let newColors = [...colors, color];
-            let uniqueColors = [...new Set(newColors)];
-            return uniqueColors.length <= 3;
-        });
+        if (item.category !== type) {
+            return false;
+        }
+
+        let newColors = [...colors, ...item.color];
+        let uniqueColors = [...new Set(newColors)];
+
+        return uniqueColors.length <= 3;
     });
 
     if (items.length === 0) {
         return undefined;
     }
 
-    const randomIndex = Math.floor(Math.random() * items.length);
-    return items[randomIndex];
-}
+    let favoriteItems = items.filter(item => item.isFavorite);
+    let nonFavoriteItems = items.filter(item => !item.isFavorite);
 
+    let randomIndex;
+    if (favoriteItems.length > 0 && Math.random() < 0.7) {
+        randomIndex = Math.floor(Math.random() * favoriteItems.length);
+        return favoriteItems[randomIndex];
+    } else {
+        randomIndex = Math.floor(Math.random() * nonFavoriteItems.length);
+        return nonFavoriteItems[randomIndex];
+    }
+}
 
 async function filterItems(userId, options) {
     console.log('CAME TO FILTER ITEMS IN ROMANTIC STRATEGY');
@@ -269,6 +290,7 @@ async function filterItems(userId, options) {
         }
 
         return true;
+
     
     });
     

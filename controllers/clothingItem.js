@@ -97,8 +97,7 @@ const updateClothingItem = async (userId, clothingItemId, clothingItemData) => {
         console.error('Error:', error);
         throw error;
     }
-}        
-
+}
 
 // delete clothing item
 const deleteClothingItem = async (userId, clothingItemId) => {

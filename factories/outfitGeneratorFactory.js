@@ -15,12 +15,12 @@ class OutfitGeneratorFactory {
 
         // Check for Romantic strategy
         console.log('checking for romantic strategy')
-        if (clothingItems.some(item => (item.subcategory === 'Skirt' || item.subcategory === 'Dress') && item.color.some(color => ['Blue', 'Red', 'Yellow', 'Green'].includes(color)) && options.style != 'Sportswear')) {
+        if (clothingItems.some(item => (item.subcategory === 'Skirt' || item.subcategory === 'Dress') && options.style != 'Sportswear')) {
             strategies.push(new RomanticOutfitStrategy(userId, options));
         }
 
         // Check for Athleisure strategy
-        if (clothingItems.some(item => item.category === 'Bottom' && item.style === 'Sportswear' && (options.style == 'Casual') || (options.style == 'Sportswear'))) {
+        if (clothingItems.some(item => item.category === 'Bottom' && item.style === 'Sportswear' && ((options.style == 'Casual') || (options.style == 'Sportswear')))) {
             strategies.push(new AthleisureOutfitStrategy(userId, options));
         }
 
