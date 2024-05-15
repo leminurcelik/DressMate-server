@@ -248,12 +248,25 @@ async function filterItems(userId, options) {
     // filter the clothing items by the weather and style
     const filteredItems = clothingItems.filter(item => {
 
-       /*  if (item.category === 'Shoes' && options.style === 'Evening') {
-            return item.style === 'Evening';
+        if (item.category === 'Shoes') {
+            if (options.style === 'Evening' && item.style !== 'Evening') {
+                return false;
+            }
+            if (options.style === 'Formal' && item.style !== 'Evening' && item.style !== 'Formal') {
+                return false;
+            }
+            if (item.isClean === false) {
+                return false;
+            }
+        } else if ( !styleOptions.includes(item.style)
+            || !(item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'One-piece' || item.category === 'Outerwear')) {
+            return false;
         }
-        if (item.category === 'Shoes' && options.style === 'Formal') {
-            return item.style === 'Evening' || item.style=='Formal';
-        } */
+
+
+        if(options.style === 'Evening' && item.category === 'Shoes' && item.style !== 'Evening') {
+            return false;
+        }
 
         const weatherOptions = ['Cold', 'Cool', 'Warm', 'Hot'];
         const dayWeatherIndex = weatherOptions.indexOf(dayWeather);
@@ -269,10 +282,6 @@ async function filterItems(userId, options) {
             return false;
         }
 
-        // check style and cleanliness for all items
-        if (!styleOptions.includes(item.style) || !item.isClean) {
-            return false;
-        }
 
         // filter out items with certain fabrics when it's raining or snowing
         if ((weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
@@ -281,11 +290,6 @@ async function filterItems(userId, options) {
 
         // filter out items that are not boots when it's snowing
         if (weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
-            return false;
-        }
-
-        // check if the item's category is 'Top', 'Shoes', 'One-piece', 'Outerwear', or if the item's subcategory is 'Skirt'
-        if (!(item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')) {
             return false;
         }
 
