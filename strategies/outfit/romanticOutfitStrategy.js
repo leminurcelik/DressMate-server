@@ -282,6 +282,10 @@ async function filterItems(userId, options) {
             return false;
         }
 
+        if (item.category != 'Shoes' && item.isClean === false) {
+            return false;
+        }
+
 
         // filter out items with certain fabrics when it's raining or snowing
         if ((weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
