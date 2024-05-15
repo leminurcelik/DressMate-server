@@ -216,18 +216,24 @@ async function filterItems(userId, options) {
 
     // filter 
     const filteredItems = clothingItems.filter(item => {
-        if (item.category === 'Shoes' && options.style === 'Evening') {
-            return item.style === 'Evening' && item.isClean !== false;
+        if (item.category === 'Shoes') {
+            if (options.style === 'Evening' && item.style !== 'Evening') {
+                return false;
+            }
+            if (options.style === 'Formal' && item.style !== 'Evening' && item.style !== 'Formal') {
+                return false;
+            }
+            if (item.isClean === false) {
+                return false;
+            }
+        } else if (!item.wearableWeather.includes(dayWeather) 
+            || !styleOptions.includes(item.style)
+            || !(item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'One-piece' || item.category === 'Outerwear')
+            || item.isClean === false) {
+            return false;
         }
-        if (item.category === 'Shoes' && options.style === 'Formal') {
-            return item.style === 'Evening' || item.style=='Formal' && item.isClean !== false;
-        }
-        
-
-        return item.wearableWeather.includes(dayWeather) 
-            && styleOptions.includes(item.style)
-            && (item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'Shoes' || item.category === 'One-piece' || item.category === 'Outerwear')
-            && item.isClean !== false;
+    
+        return true;
     });
 
     return filteredItems;
