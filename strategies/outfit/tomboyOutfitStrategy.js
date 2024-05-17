@@ -223,8 +223,8 @@ function createOutfit(clothingItems, temp, condition) {
     }
 
     //randomly choosing one of the outfits
-    let randomIndex = Math.floor(Math.random() * outfits.length);
-    return outfits[randomIndex];
+    //let randomIndex = Math.floor(Math.random() * outfits.length);
+    return outfits;
 }
 
 function getRandomItemByType(clothingItems, type) {
