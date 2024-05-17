@@ -255,16 +255,14 @@ async function filterItems(userId, options) {
             if (options.style === 'Formal' && item.style !== 'Evening' && item.style !== 'Formal') {
                 return false;
             }
+            if (!styleOptions.includes(item.style)) {
+                return false;
+            }
             if (item.isClean === false) {
                 return false;
             }
         } else if ( !styleOptions.includes(item.style)
             || !(item.category === 'Top' || item.subcategory === 'Skirt' || item.category === 'One-piece' || item.category === 'Outerwear')) {
-            return false;
-        }
-
-
-        if(options.style === 'Evening' && item.category === 'Shoes' && item.style !== 'Evening') {
             return false;
         }
 

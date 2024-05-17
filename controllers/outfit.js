@@ -31,10 +31,31 @@ const generateOutfit = async (userId, options) => {
 
 const saveOutfit = async (userId, outfitInfo) => {
     try {
+        console.log('saveOutfit info', outfitInfo);  
+
+        const user = await User.findById(userId).populate('savedOutfit');
+        console.log('user:', user);
+
+        // Check if the outfit has been saved before
+        const isOutfitSaved = user.savedOutfit.some(savedOutfit => {
+            // Convert item IDs to strings for comparison
+            const newOutfitItems = outfitInfo.items.map(item => item.id.toString());
+            const savedOutfitItems = savedOutfit.items.map(item => item.id.toString());
+
+            // Sort the arrays and convert them to strings for comparison
+            return JSON.stringify(newOutfitItems.sort()) === JSON.stringify(savedOutfitItems.sort());
+        });
+
+        if (isOutfitSaved) {
+            console.log('This outfit has been saved before.');
+            return null;
+        }
+
+        console.log('saveOutfit info', outfitInfo);  
         const newOutfit = await Outfit.create(outfitInfo); 
         newOutfit.isSaved = true;
         await newOutfit.save(); 
-        const user = await User.findById(userId);
+        //const user = await User.findById(userId);
         user.savedOutfit.push(newOutfit._id);
         const result = await user.save();
         return result;
