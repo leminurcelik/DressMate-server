@@ -70,7 +70,7 @@ const getSavedOutfits = async (userId) => {
         console.log('getSavedOutfits');
         console.log('userId:', userId);
         const user = await User.findById(userId);
-        const savedOutfits = await Outfit.find({ _id: { $in: user.savedOutfit } });
+        const savedOutfits = await Outfit.find({ _id: { $in: user.savedOutfit }, isSaved: true });
         console.log('savedOutfits:', savedOutfits);
         return savedOutfits;
     } catch (error) {
