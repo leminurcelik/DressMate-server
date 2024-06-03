@@ -94,7 +94,7 @@ async function filterItems(userId, options) {
             }
     
             // For other categories, it should include items that are labeled with the same weather or one level hotter
-            if (item.category !== 'Outerwear' && !(item.wearableWeather.includes(dayWeather) || (hotterWeather && item.wearableWeather.includes(hotterWeather)))) {
+            if (item.category !== 'Outerwear' && item.wearableWeather && !(item.wearableWeather.includes(dayWeather) || (hotterWeather && item.wearableWeather.includes(hotterWeather)))) {
                 return false;
             }
     
@@ -104,12 +104,12 @@ async function filterItems(userId, options) {
             }
     
             // filter out items with certain fabrics when it's raining or snowing
-            if ((weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
+            if (weatherData && weatherData.condition && (weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
                 return false;
             }
     
             // filter out items that are not boots when it's snowing
-            if (weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
+            if (weatherData && weatherData.condition && weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subcategory !== 'Boots') {
                 return false;
             }
 

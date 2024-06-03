@@ -286,12 +286,12 @@ async function filterItems(userId, options) {
 
 
         // filter out items with certain fabrics when it's raining or snowing
-        if ((weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
+        if (weatherData && weatherData.condition && (weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
             return false;
         }
 
         // filter out items that are not boots when it's snowing
-        if (weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
+        if (weatherData && weatherData.condition && weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subcategory !== 'Boots') {
             return false;
         }
 

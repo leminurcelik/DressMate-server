@@ -229,7 +229,7 @@ async function filterItems(userId, options) {
     // if the weather is 'Hot or 'Warm', change the category of 'Sweater' and 'Shirt' to 'Outerwear' in the copied array
     if (dayWeather === 'Hot' || dayWeather === 'Warm') {
         clothingItems.forEach(item => {
-            if (item.subCategory === 'Sweater' || item.subCategory === 'Shirt') {
+            if (item.subcategory === 'Sweater' || item.subcategory === 'Shirt') {
                 item.category = 'Outerwear';
             }
         });
@@ -249,7 +249,7 @@ async function filterItems(userId, options) {
         }
 
         // For other categories, it should include items that are labeled with the same weather or one level hotter
-        if (item.category !== 'Outerwear' && !(item.wearableWeather.includes(dayWeather) || (hotterWeather && item.wearableWeather.includes(hotterWeather)))) {
+        if (item.category !== 'Outerwear' && item.wearableWeather && !(item.wearableWeather.includes(dayWeather) || (hotterWeather && item.wearableWeather.includes(hotterWeather)))) {
             return false;
         }
 
@@ -258,23 +258,22 @@ async function filterItems(userId, options) {
             return false;
         }
 
-        // filter out items with certain fabrics when it's raining or snowing
-        if ((weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
+        if (weatherData && weatherData.condition && (weatherData.condition.includes('rain') || weatherData.condition.includes('snow')) && ['Textile', 'Suede', 'Canvas'].includes(item.details.Fabric)) {
             return false;
         }
 
         // filter out items that are not boots when it's snowing
-        if (weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subCategory !== 'Boots') {
+        if (weatherData && weatherData.condition && weatherData.condition.includes('snow') && item.category === 'Shoes' && item.subcategory !== 'Boots') {
             return false;
         }
 
         // filter out blouses
-        if (item.subCategory === 'Blouse') {
+        if (item.subcategory === 'Blouse') {
             return false;
         }
 
         // filter out shirts when the weather is cold or cool
-        if ((dayWeather === 'Cold' || 'Cool') && item.subCategory === 'Shirt') {
+        if ((dayWeather === 'Cold' || 'Cool') && item.subcategory === 'Shirt') {
             return false;
         }
 
