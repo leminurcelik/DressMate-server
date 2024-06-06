@@ -8,6 +8,7 @@ class AthleisureOutfitStrategy extends baseOutfitStrategy {
     async generateOutfit(userId, options) {
         // get the weather data
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
+        console.log('weatherData:', weatherData);
 
         // filter the clothing items by the weather and style
         const filteredItems = await filterItems(userId, options);

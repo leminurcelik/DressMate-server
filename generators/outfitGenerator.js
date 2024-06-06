@@ -42,7 +42,7 @@ class OutfitGenerator {
             }
         }
         outfits = this.removeDuplicateOutfits(outfits);
-    
+
         // Return the array of outfits
         return outfits;
     }

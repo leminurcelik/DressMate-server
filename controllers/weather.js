@@ -47,18 +47,18 @@ const locationInfo = (location) => {
 const getTemperature = (location,date, time) => {
     
 
-    if (time == "morning") { //09:00
+    if (time == "Morning") { //09:00
         dateTime = date + " " + "09:00:00";
         
     }
-    else if (time == "afternoon") {//15:00
+    else if (time == "Afternoon") {//15:00
         dateTime = date + " " + "15:00:00";
     }
     //means evening
     else{ //21:00
         dateTime = date + " " + "21:00:00";
     }
-    console.log(dateTime);
+    console.log("datetime in weather",dateTime);
     // getting lat lon from locationInfo
     return locationInfo(location)
         .then(locationData => {
@@ -74,7 +74,7 @@ const getTemperature = (location,date, time) => {
             const apiKey = "9d0eba47feca5e6f2c0b625262cce319";
             // Constructing the absolute URL
             const url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
-
+            console.log(axios.get(url));
 
             return axios.get(url)
             .then(response => {

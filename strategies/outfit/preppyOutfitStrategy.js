@@ -8,6 +8,7 @@ class PreppyOutfitStrategy extends baseOutfitStrategy {
     async generateOutfit(userId, options) {
         // get the weather data
         const weatherData = await weather.getTemperature(options.location, options.date, options.time);
+        console.log('weatherData:', weatherData);
 
         // filter the clothing items by the weather and style
         const filteredItems = await filterItems(userId, options);
@@ -35,7 +36,7 @@ class PreppyOutfitStrategy extends baseOutfitStrategy {
 
 
 async function filterItems(userId, options){
-    console.log('preppyFilterStrategy geldi');
+    //console.log('preppyFilterStrategy geldi');
     // get the weather data
     const weatherData = await weather.getTemperature(options.location, options.date, options.time);
     console.log('weatherData:', weatherData);
@@ -61,7 +62,7 @@ async function filterItems(userId, options){
     else {
         dayWeather = "Cold";
     }
-    console.log('dayWeather:', dayWeather); 
+    //console.log('dayWeather:', dayWeather); 
 
     let styleOptions;
     switch (options.style) {
@@ -117,22 +118,22 @@ async function filterItems(userId, options){
         return true;
     });
 
-    console.log('filteredItems in preppy:', filteredItems);
+    //console.log('filteredItems in preppy:', filteredItems);
     return filteredItems;  
 }
 
 
 
 function createOutfit(clothingItems, temp, condition) {
-    console.log('CAME TO CREATE OUTFIT IN preppy STRATEGY');
+    //console.log('CAME TO CREATE OUTFIT IN preppy STRATEGY');
     let outfits = [];
     let colors = [];
 
     const one_piece = getRandomItemByType(clothingItems, 'One-piece');
     if (one_piece) {
-        console.log('one_piece found');
+        //console.log('one_piece found');
         colors.push(...one_piece.color);
-        console.log(colors);
+        //console.log(colors);
         const shoe = getRandomItemByColorAndType(clothingItems, colors, 'Shoes');
         if (shoe) {
             shoe.color.forEach(color => {
@@ -140,9 +141,9 @@ function createOutfit(clothingItems, temp, condition) {
                     colors.push(color);
                 }
             });
-            console.log('shoe found');
-            console.log(shoe.color)
-            console.log(colors);
+            //console.log('shoe found');
+            //console.log(shoe.color)
+            //console.log(colors);
             let outfit_op1_items = [
                 { id: one_piece._id, imageUrl: one_piece.imageUrl, category: one_piece.category },
                 { id: shoe._id, imageUrl: shoe.imageUrl, category: shoe.category},
@@ -159,7 +160,7 @@ function createOutfit(clothingItems, temp, condition) {
                 weatherCondition: condition,
                 strategy: 'preppy'
             });
-            console.log('outfit_op1:', outfit_op1);
+            //console.log('outfit_op1:', outfit_op1);
             outfits.push(outfit_op1);
         }
     }
@@ -168,9 +169,9 @@ function createOutfit(clothingItems, temp, condition) {
     const top = getRandomItemByType(clothingItems, 'Top');
     if (top) {
         colors.push(...top.color);
-        console.log('top found');
-        console.log(top.color);
-        console.log(colors);
+        //console.log('top found');
+        //console.log(top.color);
+        //console.log(colors);
         const bottom = getRandomItemByColorAndType(clothingItems, colors, 'Bottom');
         if (bottom) {
             bottom.color.forEach(color => {
@@ -178,9 +179,9 @@ function createOutfit(clothingItems, temp, condition) {
                     colors.push(color);
             }
             });
-            console.log('bottom found');
-            console.log(bottom.color);
-            console.log(colors);
+            //console.log('bottom found');
+            //console.log(bottom.color);
+            //console.log(colors);
             const shoe = getRandomItemByColorAndType(clothingItems, colors, 'Shoes');
             if (shoe) {
                 shoe.color.forEach(color => {
@@ -188,9 +189,9 @@ function createOutfit(clothingItems, temp, condition) {
                         colors.push(color);
                     }
                 });
-                console.log('shoe found');
-                console.log('shoe color: ',shoe.color);
-                console.log(colors);
+                //console.log('shoe found');
+                //console.log('shoe color: ',shoe.color);
+                //console.log(colors);
                 let outfit_op2_items = [
                     { id: top._id, imageUrl: top.imageUrl, category: top.category},
                     { id: bottom._id, imageUrl: bottom.imageUrl , category: bottom.category},
@@ -208,7 +209,7 @@ function createOutfit(clothingItems, temp, condition) {
                     weatherCondition: condition,
                     strategy: 'preppy'
                 });
-                console.log('outfit_op2:', outfit_op2);
+                //console.log('outfit_op2:', outfit_op2);
                 outfits.push(outfit_op2);
             }
         }
