@@ -78,7 +78,21 @@ const updateClothingItem = async (userId, clothingItemId, clothingItemData) => {
 
         // Update the clothing item properties
         for (let key in clothingItemData) {
-            if (cloth[key] !== undefined) {
+            // If the property is an object (but not an array), update its sub-properties
+            if (typeof clothingItemData[key] === 'object' && clothingItemData[key] !== null && !Array.isArray(clothingItemData[key])) {
+                // If cloth[key] is not an object or is null, initialize it as an empty object
+                if (typeof cloth[key] !== 'object' || cloth[key] === null) {
+                    cloth[key] = {};
+                }
+                for (let subKey in clothingItemData[key]) {
+                    // If subKey doesn't exist in cloth[key], add it
+                    if (cloth[key][subKey] === undefined) {
+                        cloth[key][subKey] = clothingItemData[key][subKey];
+                    } else {
+                        cloth[key][subKey] = clothingItemData[key][subKey];
+                    }
+                }
+            } else if (cloth[key] !== undefined) {
                 cloth[key] = clothingItemData[key];
             } else {
                 throw new Error(`Invalid property: ${key}`);
