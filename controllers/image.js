@@ -37,16 +37,16 @@ const suggestClothingItemDetails = async (userId, imageUrl) => {
         // Extract object localization
         const objects = result.localizedObjectAnnotations;
 
-
         // Create a mapping of subcategories to categories
         const categoryMapping = {
             'T-shirt': 'Top',
             'Blouse': 'Top',
             'Sweater': 'Top',
+            'Shirt': 'Top',
             'Pants': 'Bottom',
-            'Short': 'Bottom',
+            'Shorts': 'Bottom',
             'Jeans': 'Bottom',
-            'Skirts': 'Bottom',
+            'Skirt': 'Bottom',
             'Sneakers': 'Shoes',
             'Sandals': 'Shoes',
             'Boots': 'Shoes',
@@ -127,10 +127,8 @@ function getColorBucket(hsl) {
     console.log('s:', s);
     console.log('l:', l);
 
-    if (l < 0.16) return 'Black';
-    if (l > 0.9) return 'White';
-    if (s < 0.25) return 'Gray';
-
+    if (l < 0.2) return 'Black';
+    if (l > 0.78) return 'White';
     if (h < 10.5) return 'Red';
     if (h < 45) return 'Orange';
     if (h < 75) return 'Yellow';
@@ -139,5 +137,6 @@ function getColorBucket(hsl) {
     if (h < 285) return 'Purple';
     if (h < 345) return 'Pink';
     if (h >= 345) return 'Red';
+    if (s < 0.25) return 'Gray';
 }
 module.exports = { suggestClothingItemDetails, rgbToHsl, getColorBucket};
