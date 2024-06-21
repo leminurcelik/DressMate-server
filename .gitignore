@@ -19,3 +19,6 @@ yarn.lock
 
 # typescript
 *.tsbuildinfo
+
+#config
+config/config.js

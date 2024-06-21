@@ -21,11 +21,11 @@
 ]
  */
 const axios = require('axios');
-
+import { openWeatherApiKey } from '../config/config';   
 
 const locationInfo = (location) => {
-    const apiKey = "9d0eba47feca5e6f2c0b625262cce319";
-    const url = `http://api.openweathermap.org/geo/1.0/direct?appid=${apiKey}&q=${location}`;
+
+    const url = `http://api.openweathermap.org/geo/1.0/direct?appid=${openWeatherApiKey}&q=${location}`;
     return axios.get(url)
         .then(response => {
             const data = response.data;
@@ -71,9 +71,8 @@ const getTemperature = (location,date, time) => {
             //url
             // api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric
 
-            const apiKey = "9d0eba47feca5e6f2c0b625262cce319";
             // Constructing the absolute URL
-            const url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+            const url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${openWeatherApiKey}&units=metric`;
             console.log(axios.get(url));
 
             return axios.get(url)

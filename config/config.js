@@ -19,4 +19,7 @@ const CONFIG_VISION = {
       }
   };
 
-  module.exports = { CONFIG_VISION };
+  module.exports = { CONFIG_VISION, openWeatherApiKey };
+
+
+  const openWeatherApiKey = "9d0eba47feca5e6f2c0b625262cce319";
